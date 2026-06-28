@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<!-- The DOCTYPE declaration informs the web browser about the type and version of HTML being used. -->
+<html lang="en">
+<!-- The <html> tag is the root element of the page. 'lang="en"' specifies English as the primary language for accessibility and SEO. -->
+
+<head>
+    <!-- The <head> section contains metadata about the document that isn't displayed on the page itself. -->
+    <meta charset="UTF-8">
+    <!-- Character encoding set to UTF-8 to ensure all characters (including emojis) are rendered correctly. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Viewport meta tag ensures the website is responsive and looks correct on mobile devices by setting the width to the device width. -->
+    <title>Incredible India - Travel Planner</title>
+    <!-- The <title> appears in the browser tab and is critical for Search Engine Optimization (SEO). -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Links the external CSS file which contains all the styling and layout rules for the website. -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Imports Google Fonts (Outfit and Playfair Display) to provide a premium, modern typography feel. -->
+</head>
+
+<body>
+    <!-- The <body> tag contains all the visible content of the web page. -->
+
+    <!-- Navigation Area: Contains the brand logo and site links. -->
+    <header id="main-header">
+        <!-- <header> defines a container for introductory content or a set of navigational links. -->
+        <nav class="navbar">
+            <!-- <nav> is a semantic tag specifically for navigation blocks. '.navbar' provides the flexbox layout in CSS. -->
+            <a href="index.html" class="logo">
+                <!-- <a> (Anchor) tag used as a link. Here it wraps the logo to allow users to return to the home page. -->
+                <img src="images/logo.png" alt="Travel Planner Logo" class="logo-img">
+                <!-- <img> renders the brand logo. 'alt' provides text for screen readers and if the image fails to load. -->
+            </a>
+            <div class="hamburger" id="hamburger">
+                <!-- <div> acting as a container for the mobile menu toggle button. -->
+                <span class="bar"></span>
+                <!-- <span> tags here represent the three horizontal lines of the hamburger menu icon. -->
+                <span class="bar"></span>
+                <!-- These are styled in CSS to create the visual 'icon' without using an image file. -->
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-links">
+                <!-- <ul> (Unordered List) used to group the main navigation links semantically. -->
+                <li><a href="festivals.html">Festivals</a></li>
+                <!-- <li> (List Item) containing a link to the Festivals page. -->
+                <li><a href="destinations.html">Destinations</a></li>
+                <!-- Link to the state-wise destinations grid. -->
+                <li><a href="adventure.html">Adventure</a></li>
+                <!-- Link to the adventure activities page. -->
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Area: Holds the primary sections of the landing page. -->
+    <main>
+        <!-- <main> specifies the unique, primary content of the document. -->
+        
+        <section id="hero">
+            <!-- <section> defines a distinct thematic area on the page. 'id="hero"' targets it for specific styling. -->
+            <div class="video-container">
+                <!-- <div> wrapper specifically for the full-screen background video. -->
+                <video autoplay loop muted playsinline poster="images/hero-fallback.jpg" id="hero-video">
+                    <!-- <video> element for dynamic background. 'autoplay/loop/muted' are performance and UX requirements. -->
+                    <source src="images/hero-video.mp4" type="video/mp4">
+                    <!-- <source> points to the actual video file. -->
+                    Your browser does not support the video tag.
+                    <!-- Fallback text displayed if the browser is extremely old and cannot render <video>. -->
+                </video>
+                <div class="overlay"></div>
+                <!-- <div> used as a semi-transparent dark layer over the video to ensure text readability. -->
+            </div>
+
+            <div class="hero-content fade-in-section">
+                <!-- <div> container for the text and buttons appearing on top of the hero background. -->
+                <h1>Discover Incredible India</h1>
+                <!-- <h1> is the primary heading of the page, vital for SEO and hierarchy. -->
+                <p>Experience the magic of India with personalized itineraries powered by AI. From the Himalayas to the backwaters, plan your perfect journey.</p>
+                <!-- <p> (Paragraph) provides the main marketing message of the hero section. -->
+
+                <div class="hero-actions">
+                    <!-- <div> grouping for primary action buttons. -->
+                    <a href="#" class="btn-primary btn-large btn-hero">✨ Plan Your Journey with AI</a>
+                    <!-- <a> styled as a button. Triggers the AI Chatbot interaction in app.js. -->
+                </div>
+
+                <p class="small-text">Join thousands of travelers exploring India</p>
+                <!-- <p> with a specific class for smaller, subdued social proof text. -->
+            </div>
+        </section>
+
+        <!-- Explore India by Theme: Quick entry points to categorized content. -->
+        <section id="explore-themes" class="theme-section section-padding">
+            <!-- Section for the three main categories (Festivals, Destinations, Adventure). -->
+            <div class="container">
+                <!-- <div> 'container' ensures content doesn't stretch too wide on larger screens (max-width logic). -->
+                <h2 class="section-title fade-in-section">Explore India Your Way</h2>
+                <!-- <h2> used for the section title to maintain proper document heading hierarchy. -->
+                <p class="subtitle text-center fade-in-section">Choose your perfect adventure</p>
+                <!-- <p> acting as a sub-header or explanatory text for the section. -->
+
+                <div class="theme-grid">
+                    <!-- <div> wrapper using CSS Grid to align category cards. -->
+                    <a href="festivals.html" class="theme-card theme-festivals fade-in-section">
+                        <!-- <a> wrapping the entire card to make the whole block clickable. -->
+                        <span class="theme-icon">🎉</span>
+                        <!-- <span> used to display a large emoji icon for visual appeal. -->
+                        <h3>Vibrant Festivals</h3>
+                        <!-- <h3> for the card title. -->
+                        <p>Experience colorful celebrations</p>
+                        <!-- <p> for the card description. -->
+                        <span class="btn-theme">Explore Festivals</span>
+                        <!-- <span> styled as a button to give a visual cue to the user. -->
+                    </a>
+
+                    <a href="destinations.html" class="theme-card theme-destinations fade-in-section">
+                        <!-- Card for Destinations. -->
+                        <span class="theme-icon">📍</span>
+                        <h3>Iconic Destinations</h3>
+                        <p>Visit breathtaking landmarks</p>
+                        <span class="btn-theme">Discover Places</span>
+                    </a>
+
+                    <a href="adventure.html" class="theme-card theme-adventure fade-in-section">
+                        <!-- Card for Adventure. -->
+                        <span class="theme-icon">🏔️</span>
+                        <h3>Thrilling Adventures</h3>
+                        <p>Trek, dive, and explore</p>
+                        <span class="btn-theme">Start Adventure</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- What Makes India Incredible: Highlights unique selling points. -->
+        <section id="activities" class="section-padding bg-pattern">
+            <!-- Section showcasing various experience types. -->
+            <div class="container">
+                <h2 class="section-title fade-in-section">What Makes India Incredible</h2>
+                <div class="grid-4">
+                    <!-- <div> using a 4-column layout for feature cards. -->
+                    <div class="experience-card fade-in-section">
+                        <!-- <div> container for an individual feature card. -->
+                        <div class="icon-box">🛕</div>
+                        <!-- <div> specifically styled to hold and highlight an icon/emoji. -->
+                        <h3>Heritage & Culture</h3>
+                        <p>Visit ancient temples, palaces, and experience traditional festivals.</p>
+                    </div>
+                    <div class="experience-card fade-in-section">
+                        <div class="icon-box">🐅</div>
+                        <h3>Adventure</h3>
+                        <p>Trekking in the Himalayas and wildlife safaris in national parks.</p>
+                    </div>
+                    <div class="experience-card fade-in-section">
+                        <div class="icon-box">🧘</div>
+                        <h3>Wellness</h3>
+                        <p>Rejuvenate with Yoga, meditation retreats, and Ayurvedic treatments.</p>
+                    </div>
+                    <div class="experience-card fade-in-section">
+                        <div class="icon-box">🍛</div>
+                        <h3>Culinary Journey</h3>
+                        <p>Savor street food tours and authentic regional cuisine experiences.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials: Social proof from other travelers. -->
+        <section id="testimonials" class="testimonials-section section-padding">
+            <div class="container">
+                <h2 class="section-title fade-in-section">What Travelers Say</h2>
+                <p class="subtitle fade-in-section" style="text-align: center; margin-top: -20px; margin-bottom: 50px;">Real experiences from people who've explored India's wonders</p>
+                <!-- <p> with inline styles to override default spacing for this specific layout. -->
+
+                <div class="testimonials-grid">
+                    <!-- <div> container for the grid of review cards. -->
+                    <div class="testimonial-card fade-in-section">
+                        <!-- <div> wrapper for a single traveler testimonial. -->
+                        <div class="testimonial-quote">
+                            "India changed my perspective on life. The colors, the people, the food – experiencing Holi in Mathura was beyond anything I imagined!"
+                        </div>
+                        <!-- <div> containing the actual quoted text from the user. -->
+                        <div class="testimonial-author">
+                            <!-- <div> container for the author's visual and textual info. -->
+                            <div class="avatar sarah-avatar"></div>
+                            <!-- <div> styled with a background image to act as a profile picture. -->
+                            <div class="author-info">
+                                <!-- <div> for name, location and rating. -->
+                                <h4>Sarah Jenkins</h4>
+                                <!-- <h4> for the author's name. -->
+                                <p>United Kingdom</p>
+                                <!-- <p> for the author's country. -->
+                                <div class="stars">⭐⭐⭐⭐⭐</div>
+                                <!-- <div> holding emojis to represent the 5-star rating. -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card fade-in-section">
+                        <div class="testimonial-quote">
+                            "Planning with this AI tool made our Golden Triangle and Diwali trip seamless. Every hotel was perfect, guides were knowledgeable. Highly recommend!"
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="avatar michael-avatar"></div>
+                            <div class="author-info">
+                                <h4>Michael Chen</h4>
+                                <p>Singapore</p>
+                                <div class="stars">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card fade-in-section">
+                        <div class="testimonial-quote">
+                            "Kerala during Onam is magical. The houseboats, flower carpets, and boat races - a must-do experience. Our guide made it truly special."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="avatar emma-avatar"></div>
+                            <div class="author-info">
+                                <h4>Emma & Tom</h4>
+                                <p>Australia</p>
+                                <div class="stars">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action: Final engagement point. -->
+        <section id="cta" class="section-padding gradient-bg">
+            <div class="container text-center fade-in-section">
+                <h2>Ready to Explore Incredible India?</h2>
+                <p>Let AI plan your perfect Indian adventure, tailored just for you.</p>
+                <a href="login.html" class="btn-primary btn-large" id="cta-btn">Start Planning</a>
+                <!-- Primary Action Link leading to registration/login. -->
+                <div id="form-status" class="form-status"></div>
+                <!-- <div> placeholder for displaying messages if this section had a form. -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer: Site info and closing links. -->
+    <footer>
+        <!-- <footer> declares the footer for the page or section. -->
+        <div class="container">
+            <div class="footer-content">
+                <!-- <div> using flexbox to organize footer columns. -->
+                <div class="footer-logo">Travel Planner India</div>
+                <!-- <div> acting as a text-based secondary logo for the footer. -->
+
+                <div class="footer-section">
+                    <!-- <div> grouping for footer navigation. -->
+                    <h4>Quick Links</h4>
+                    <!-- <h4> for small footer headings. -->
+                    <ul class="footer-links">
+                        <!-- <ul> used for footer link list. -->
+                        <li><a href="festivals.html">Festivals</a></li>
+                        <li><a href="destinations.html">Destinations</a></li>
+                        <li><a href="adventure.html">Adventure</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <p class="contact-email">hello@travelplanner.in</p>
+                    <div class="social-links">
+                        <!-- <div> for social media icons. -->
+                        <span>📸</span>
+                        <!-- <span> used for Instagram icon placeholder. -->
+                        <span>🐦</span>
+                        <!-- <span> used for Twitter icon placeholder. -->
+                        <span>📘</span>
+                        <!-- <span> used for Facebook icon placeholder. -->
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2026 Travel Planner India. All rights reserved.
+            </div>
+            <!-- <div> for the legal copyright notice. -->
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Overlay: Dark background when menu is open. -->
+    <div id="nav-overlay" class="nav-overlay"></div>
+
+    <!-- Back to Top Button: Interactive scroll-to-top feature. -->
+    <button id="back-to-top" class="back-to-top" aria-label="Back to Top">
+        <!-- <button> used for the functional scroll trigger. 'aria-label' helps screen readers. -->
+        <span class="arrow">⬆️</span>
+        <!-- <span> containing the arrow visual. -->
+    </button>
+
+    <!-- AI Chatbot: Floating interactive component. -->
+    <div class="chatbot-container">
+        <!-- <div> main container for the chatbot widget. -->
+        <div class="chatbot-trigger" id="chatbot-trigger">
+            <!-- <div> acting as the button that opens the chat. -->
+            <span>🤖</span>
+            <!-- <span> containing the robot icon. -->
+        </div>
+
+        <div class="chatbot-window" id="chatbot-window">
+            <!-- <div> the actual chat panel that pops up. -->
+            <div class="chat-header">
+                <!-- <div> header area of the chat window. -->
+                <div class="chat-header-info">
+                    <!-- <div> holding assistant name and status. -->
+                    <h4>🇮🇳 India Travel Assistant</h4>
+                    <p>Powered by AI</p>
+                </div>
+                <button class="close-chat" id="close-chat">&times;</button>
+                <!-- <button> to close the chat. '&times;' is the HTML entity for an 'X'. -->
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <!-- <div> empty container where JavaScript (app.js) will inject message bubbles. -->
+            </div>
+            <form class="chat-input-container" id="chat-form">
+                <!-- <form> to handle message submission natively. -->
+                <input type="text" class="chat-input" id="chat-input" placeholder="Ask me anything about India..." autocomplete="off">
+                <!-- <input> text box for user queries. 'autocomplete="off"' prevents browser suggestions from covering the chat. -->
+                <button type="submit" class="send-btn">➤</button>
+                <!-- <button> to submit the form. -->
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <!-- <script> tag to load the main JavaScript logic. Placed at the end to ensure DOM availability. -->
+
+</body>
+
+</html>

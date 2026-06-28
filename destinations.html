@@ -1,0 +1,573 @@
+<!-- 
+    Document Type Declaration: Tells the browser this is an HTML5 document.
+-->
+<!DOCTYPE html>
+<!-- 
+    Root Element: Contains all HTML content. The 'lang' attribute specifies English.
+-->
+<html lang="en">
+
+<!-- 
+    Head Section: Contains metadata, title, and external resource links.
+-->
+
+<head>
+    <!-- Character Encoding: Unicode support for wide range of symbols/text. -->
+    <meta charset="UTF-8">
+    <!-- Viewport Settings: Ensures standard scaling across mobile/desktop browsers. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Page Title: Specific to the destinations page. -->
+    <title>Iconic Destinations | Travel Planner India</title>
+    <!-- Core Style Link: Includes all global and component-specific CSS. -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Typography: Imports 'Outfit' for UI and 'Playfair Display' for editorial headings. -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<!-- 
+    Body Section: Main container for visible page elements.
+-->
+
+<body>
+
+    <!-- 
+        Main Site Header: Navigation bar with fixed positioning.
+    -->
+    <header id="main-header">
+        <!-- navbar: Flexible layout for brand logo and links. -->
+        <nav class="navbar">
+            <!-- Home Logo Link. -->
+            <a href="index.html" class="logo">
+                <!-- Branded Logo Image. -->
+                <img src="images/logo.png" alt="Travel Planner Logo" class="logo-img">
+            </a>
+            <!-- Mobile Menu Toggle: Visible on mobile devices. -->
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <!-- Global Nav Links. -->
+            <ul class="nav-links">
+                <li><a href="festivals.html">Festivals</a></li>
+                <li><a href="destinations.html">Destinations</a></li>
+                <li><a href="adventure.html">Adventure</a></li>
+                <li id="logout-nav-item" style="display: none;"><a href="#" id="logout-link">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Content Wrapper for the Destinations Discovery view. -->
+    <main>
+        <!-- 
+            Hero Section: Introduction to the destinations page.
+        -->
+        <section class="destinations-hero">
+            <!-- Fade-in container for smooth page entry. -->
+            <div class="container fade-in-section">
+                <!-- Page Title. -->
+                <h1>Discover India's Iconic Destinations</h1>
+                <!-- Brief context paragraph. -->
+                <p>Explore breathtaking landmarks from every corner of India</p>
+            </div>
+        </section>
+
+        <!-- 
+            States Grid: A large gallery listing major Indian states.
+        -->
+        <section class="states-section section-padding">
+            <div class="container">
+                <!-- Section Title. -->
+                <h2 class="section-title fade-in-section">Popular Destinations by State</h2>
+                <!-- Theme descriptor subtitle. -->
+                <p class="subtitle text-center fade-in-section">From the Himalayas to the beaches, palaces to backwaters
+                </p>
+
+                <!-- 
+                    Interactive Grid: Uses .state-grid to layout individual state tiles.
+                -->
+                <div class="state-grid">
+                    <!-- 
+                        Andhra Pradesh State Tile: Links to its unique detail subpage. 
+                        Inline background helps vary images per state.
+                    -->
+                    <a href="pages/destinations/andhra-pradesh.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/andhra-pradesh.jpg');">
+                        <!-- Dark gradient overlay for text readability. -->
+                        <div class="state-overlay"></div>
+                        <!-- State-themed icon. -->
+                        <span class="state-icon">🕉️</span>
+                        <!-- Content group at the bottom of the card. -->
+                        <div class="state-info">
+                            <!-- State Name. -->
+                            <h3>Andhra Pradesh</h3>
+                            <!-- Short highlights list. -->
+                            <p>Tirupati, Araku Valley</p>
+                        </div>
+                    </a>
+
+                    <!-- Arunachal Pradesh. -->
+                    <a href="pages/destinations/arunachal-pradesh.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/arunachal-pradesh.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🏔️</span>
+                        <div class="state-info">
+                            <h3>Arunachal Pradesh</h3>
+                            <p>Tawang Monastery</p>
+                        </div>
+                    </a>
+
+                    <!-- Assam. -->
+                    <a href="pages/destinations/assam.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/assam.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🐅</span>
+                        <div class="state-info">
+                            <h3>Assam</h3>
+                            <p>Kaziranga National Park</p>
+                        </div>
+                    </a>
+
+                    <!-- Bihar. -->
+                    <a href="pages/destinations/bihar.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/bihar.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🏰</span>
+                        <div class="state-info">
+                            <h3>Bihar</h3>
+                            <p>Nalanda University Ruins</p>
+                        </div>
+                    </a>
+
+                    <!-- Chhattisgarh. -->
+                    <a href="pages/destinations/chhattisgarh.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/chhattisgarh.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🌧️</span>
+                        <div class="state-info">
+                            <h3>Chhattisgarh</h3>
+                            <p>Chitrakote Falls</p>
+                        </div>
+                    </a>
+
+                    <!-- Goa. -->
+                    <a href="pages/destinations/goa.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/goa.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🏖️</span>
+                        <div class="state-info">
+                            <h3>Goa</h3>
+                            <p>Beaches & Portuguese Heritage</p>
+                        </div>
+                    </a>
+
+                    <!-- Gujarat. -->
+                    <a href="pages/destinations/gujarat.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/gujarat.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🦁</span>
+                        <div class="state-info">
+                            <h3>Gujarat</h3>
+                            <p>Rann of Kutch, Gir Forest</p>
+                        </div>
+                    </a>
+
+                    <!-- Haryana. -->
+                    <a href="pages/destinations/haryana.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/haryana.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🦆</span>
+                        <div class="state-info">
+                            <h3>Haryana</h3>
+                            <p>Sultanpur Bird Sanctuary</p>
+                        </div>
+                    </a>
+
+                    <!-- Himachal Pradesh. -->
+                    <a href="pages/destinations/himachal-pradesh.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/himachal-pradesh.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🏔️</span>
+                        <div class="state-info">
+                            <h3>Himachal Pradesh</h3>
+                            <p>Shimla, Manali</p>
+                        </div>
+                    </a>
+
+                    <!-- Jharkhand. -->
+                    <a href="pages/destinations/jharkhand.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/jharkhand.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🌧️</span>
+                        <div class="state-info">
+                            <h3>Jharkhand</h3>
+                            <p>Hundru Falls</p>
+                        </div>
+                    </a>
+
+                    <!-- Karnataka. -->
+                    <a href="pages/destinations/karnataka.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/karnataka.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🏰</span>
+                        <div class="state-info">
+                            <h3>Karnataka</h3>
+                            <p>Hampi, Coorg</p>
+                        </div>
+                    </a>
+
+                    <!-- Kerala. -->
+                    <a href="pages/destinations/kerala.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/kerala.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🚤</span>
+                        <div class="state-info">
+                            <h3>Kerala</h3>
+                            <p>Backwaters, Munnar</p>
+                        </div>
+                    </a>
+
+                    <!-- Madhya Pradesh. -->
+                    <a href="pages/destinations/madhya-pradesh.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/madhya-pradesh.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🏰</span>
+                        <div class="state-info">
+                            <h3>Madhya Pradesh</h3>
+                            <p>Khajuraho, Pachmarhi</p>
+                        </div>
+                    </a>
+
+                    <!-- Maharashtra. -->
+                    <a href="pages/destinations/maharashtra.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/maharashtra.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🏢</span>
+                        <div class="state-info">
+                            <h3>Maharashtra</h3>
+                            <p>Mumbai, Ajanta Caves</p>
+                        </div>
+                    </a>
+
+                    <!-- Manipur. -->
+                    <a href="pages/destinations/manipur.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/manipur.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🛶</span>
+                        <div class="state-info">
+                            <h3>Manipur</h3>
+                            <p>Loktak Lake</p>
+                        </div>
+                    </a>
+
+                    <!-- Meghalaya. -->
+                    <a href="pages/destinations/meghalaya.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/meghalaya.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🌿</span>
+                        <div class="state-info">
+                            <h3>Meghalaya</h3>
+                            <p>Living Root Bridges</p>
+                        </div>
+                    </a>
+
+                    <!-- Mizoram. -->
+                    <a href="pages/destinations/mizoram.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/mizoram.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🏔️</span>
+                        <div class="state-info">
+                            <h3>Mizoram</h3>
+                            <p>Phawngpui Peak</p>
+                        </div>
+                    </a>
+
+                    <!-- Nagaland. -->
+                    <a href="pages/destinations/nagaland.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/nagaland.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🌿</span>
+                        <div class="state-info">
+                            <h3>Nagaland</h3>
+                            <p>Dzukou Valley</p>
+                        </div>
+                    </a>
+
+                    <!-- Odisha. -->
+                    <a href="pages/destinations/odisha.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/odisha.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🕉️</span>
+                        <div class="state-info">
+                            <h3>Odisha</h3>
+                            <p>Konark Sun Temple</p>
+                        </div>
+                    </a>
+
+                    <!-- Punjab. -->
+                    <a href="pages/destinations/punjab.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/punjab.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🕉️</span>
+                        <div class="state-info">
+                            <h3>Punjab</h3>
+                            <p>Golden Temple</p>
+                        </div>
+                    </a>
+
+                    <!-- Rajasthan. -->
+                    <a href="pages/destinations/rajasthan.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/rajasthan.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🏰</span>
+                        <div class="state-info">
+                            <h3>Rajasthan</h3>
+                            <p>Jaipur, Udaipur, Jaisalmer</p>
+                        </div>
+                    </a>
+
+                    <!-- Sikkim. -->
+                    <a href="pages/destinations/sikkim.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/sikkim.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🏔️</span>
+                        <div class="state-info">
+                            <h3>Sikkim</h3>
+                            <p>Gangtok, Nathula Pass</p>
+                        </div>
+                    </a>
+
+                    <!-- Tamil Nadu. -->
+                    <a href="pages/destinations/tamil-nadu.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/tamil-nadu.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🏰</span>
+                        <div class="state-info">
+                            <h3>Tamil Nadu</h3>
+                            <p>Mahabalipuram, Ooty</p>
+                        </div>
+                    </a>
+
+                    <!-- Telangana. -->
+                    <a href="pages/destinations/telangana.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/telangana.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🕌</span>
+                        <div class="state-info">
+                            <h3>Telangana</h3>
+                            <p>Hyderabad, Warangal Fort</p>
+                        </div>
+                    </a>
+
+                    <!-- Tripura. -->
+                    <a href="pages/destinations/tripura.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/tripura.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🏰</span>
+                        <div class="state-info">
+                            <h3>Tripura</h3>
+                            <p>Ujjayanta Palace</p>
+                        </div>
+                    </a>
+
+                    <!-- Uttar Pradesh. -->
+                    <a href="pages/destinations/uttar-pradesh.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/uttar-pradesh.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🕌</span>
+                        <div class="state-info">
+                            <h3>Uttar Pradesh</h3>
+                            <p>Taj Mahal, Varanasi</p>
+                        </div>
+                    </a>
+
+                    <!-- Uttarakhand. -->
+                    <a href="pages/destinations/uttarakhand.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/uttarakhand.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🏔️</span>
+                        <div class="state-info">
+                            <h3>Uttarakhand</h3>
+                            <p>Rishikesh, Valley of Flowers</p>
+                        </div>
+                    </a>
+
+                    <!-- West Bengal. -->
+                    <a href="pages/destinations/west-bengal.html" class="state-card fade-in-section"
+                        style="background-image: url('images/destinations/west-bengal.jpg');">
+                        <div class="state-overlay"></div>
+                        <span class="state-icon">🐅</span>
+                        <div class="state-info">
+                            <h3>West Bengal</h3>
+                            <p>Darjeeling, Sundarbans</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 
+        Footer Component: Site-wide bottom navigation and info.
+    -->
+    <footer>
+        <div class="container">
+            <!-- Foot Grid/Flex content. -->
+            <div class="footer-content">
+                <!-- Branding logo/text. -->
+                <div class="footer-logo">Travel Planner India</div>
+
+                <!-- Column: Quick Links. -->
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="festivals.html">Festivals</a></li>
+                        <li><a href="destinations.html">Destinations</a></li>
+                        <li><a href="adventure.html">Adventure</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column: Reach Out. -->
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <!-- Contact email. -->
+                    <p class="contact-email">hello@travelplanner.in</p>
+                    <!-- Social Link icons. -->
+                    <div class="social-links">
+                        <span>📸</span>
+                        <span>🐦</span>
+                        <span>📘</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Legal/Copyright line. -->
+            <div class="copyright">
+                &copy; 2026 Travel Planner India. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Overlay: Dark backdrop for mobile menu interaction. -->
+    <div id="nav-overlay" class="nav-overlay"></div>
+
+    <!-- Back to Top: Scroll-assist button. -->
+    <button id="back-to-top" class="back-to-top" aria-label="Back to Top">
+        <span class="arrow">⬆️</span>
+    </button>
+
+    <!-- AI Chatbot Interface. -->
+    <div class="chatbot-container">
+        <!-- Floating trigger button. -->
+        <div class="chatbot-trigger" id="chatbot-trigger">
+            <span>🤖</span>
+        </div>
+
+        <!-- Pop-up chat window. -->
+        <div class="chatbot-window" id="chatbot-window">
+            <!-- Header bar. -->
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <h4>🇮🇳 India Travel Assistant</h4>
+                    <p>Powered by AI</p>
+                </div>
+                <!-- Window close tool. -->
+                <button class="close-chat" id="close-chat">&times;</button>
+            </div>
+            <!-- Message thread container. -->
+            <div class="chat-messages" id="chat-messages">
+                <!-- Javascript will populate this area. -->
+            </div>
+            <!-- User input submission form. -->
+            <form class="chat-input-container" id="chat-form">
+                <input type="text" class="chat-input" id="chat-input" placeholder="Ask me anything about India..."
+                    autocomplete="off">
+                <button type="submit" class="send-btn">➤</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- 
+        Dynamic Place Modal: Shows details for a single clicked destination.
+    -->
+    <div class="theme-modal-overlay" id="dynamic-place-modal">
+        <!-- Modal panel box. -->
+        <div class="theme-modal-panel">
+            <!-- Close button. -->
+            <button class="theme-modal-close" id="dynamic-place-modal-close">&times;</button>
+            <!-- Content layout. -->
+            <div class="theme-modal-content">
+                <!-- Title & Blurb. -->
+                <h3 id="dynamic-place-title">Place Name</h3>
+                <p id="dynamic-place-desc">Description goes here...</p>
+                <!-- Key Information Box. -->
+                <div class="theme-highlights">
+                    <h4>Trip Information</h4>
+                    <ul>
+                        <li><strong>Highlights:</strong> <span id="dynamic-place-highlights">Cultural points.</span>
+                        </li>
+                        <li><strong>Best Time:</strong> <span id="dynamic-place-time">Season guide.</span></li>
+                        <li><strong>How to Reach:</strong> <span id="dynamic-place-reach">Transit modes.</span></li>
+                    </ul>
+                </div>
+                <!-- Deep engagement link. -->
+                <button class="btn-primary plan-trip-btn">Plan a Trip 🤖</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 
+        Premium State Gallery Modal: Shows multiple spots within a selected state.
+    -->
+    <div class="theme-modal-overlay" id="state-spots-modal">
+        <!-- The visual panel for state discovery. -->
+        <div class="theme-modal-panel state-spots-panel">
+            <!-- Corner close button. -->
+            <button class="theme-modal-close" id="state-spots-modal-close">&times;</button>
+            <!-- Gallery header. -->
+            <div class="state-spots-header">
+                <h2 id="state-spots-title" class="playfair">State Name</h2>
+            </div>
+            <!-- The grid where individual destination slots are injected. -->
+            <div class="state-spots-grid" id="state-spots-content">
+                <!-- Injected via app.js interaction loop. -->
+            </div>
+            <!-- Modal footer area. -->
+            <div class="state-spots-footer">
+                <!-- Final conversion button. -->
+                <button class="btn-primary plan-trip-btn centered-btn">Plan a Trip 🤖</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 
+        External Data & Logic:
+        1. data-destinations.js: High-level destination schema (State -> Spots).
+        2. app.js: Main interactive logic and UI state management.
+    -->
+    <script src="data-destinations.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeZhonP2b5kAHOoduq_bqhc5_1Wdf4rTw",
+            authDomain: "incredible-india-3798e.firebaseapp.com",
+            projectId: "incredible-india-3798e",
+            storageBucket: "incredible-india-3798e.firebasestorage.app",
+            messagingSenderId: "951233278790",
+            appId: "1:951233278790:web:630a11883549dbeae0ab47"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        window.firebaseAuth = auth;
+        window.firebaseSignOut = signOut;
+    </script>
+    <script src="app.js"></script>
+</body>
+
+</html>

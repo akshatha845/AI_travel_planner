@@ -1,0 +1,177 @@
+<!-- 
+    Document Type Declaration: Essential for consistent cross-browser rendering.
+-->
+<!DOCTYPE html>
+<!-- 
+    Primary HTML container: Language set to English.
+-->
+<html lang="en">
+<!-- 
+    Page Head: Contains SEO metadata, character encoding, and asset links.
+-->
+<head>
+    <!-- Standard character set. -->
+    <meta charset="UTF-8">
+    <!-- Viewport settings for mobile-first responsiveness. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Descriptive Title for search engines and browser tabs. -->
+    <title>Rajasthan | Destinations India</title>
+    <!-- Main Design System CSS. -->
+    <link rel="stylesheet" href="../../css/style.css">
+    <!-- Specialized State Page Styles (Hero, Grid, Cards). -->
+    <link rel="stylesheet" href="../../css/state-pages.css">
+    <!-- Premium Google Font pair (Outfit for UI, Playfair for Headings). -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 
+        Sticky Global Header:
+        Ensures navigation is always accessible.
+    -->
+    <header id="main-header">
+        <nav class="navbar">
+            <!-- Brand Logo: Navigates back to home. -->
+            <a href="../../index.html" class="logo">
+                <img src="../../images/logo.png" alt="Travel Planner">
+            </a>
+            <!-- Main navigation menu. -->
+            <ul class="nav-links">
+                <li><a href="../../festivals.html">Festivals</a></li>
+                <li><a href="../../destinations.html">Destinations</a></li>
+                <li><a href="../../adventure.html">Adventure</a></li>
+            </ul>
+            <!-- Primary Action Button: Links to AI Trip Planner. -->
+            <a href="../../index.html" class="btn-primary" id="join-waitlist-btn">🤖 Plan a Trip</a>
+        </nav>
+    </header>
+
+    <!-- 
+        Contextual Navigation:
+        A direct way for users to return to the previous browsing state.
+    -->
+    <button onclick="history.back()" class="state-page-back-btn">
+        ← Back
+    </button>
+
+    <!-- 
+        Main Page Content:
+        Detailed exploration of Rajasthan's top travel spots.
+    -->
+    <main>
+        <!-- Hero Section: Featuring the state's name and high-quality imagery. -->
+        <section class="state-hero" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../../images/destinations/rajasthan.jpg') center/cover no-repeat;">
+            <div class="container">
+                <!-- Large, dramatic title with Playfair typography. -->
+                <h1 class="playfair">Rajasthan</h1>
+                <!-- Evocative subline. -->
+                <p>The desert majesty.</p>
+            </div>
+        </section>
+
+        <!-- Destination Highlights Section. -->
+        <section class="spots-section section-padding">
+            <div class="container">
+                <!-- Section Header. -->
+                <h2 class="section-title text-center">Best Places to Visit</h2>
+                <!-- Minimalist design accent. -->
+                <div class="section-accent"></div>
+                <!-- Card Grid: Modern flex/grid layout. -->
+                <div class="spots-grid">
+
+                    <!-- Destination Card: Jaipur -->
+                    <div class="spot-card">
+                        <!-- Visual Thumbnail. -->
+                        <div class="spot-img">
+                            <img src="../../images/destinations/spots/jaipur-amber-fort.jpg" alt="Jaipur — Amber Fort">
+                        </div>
+                        <!-- Content Details. -->
+                        <div class="spot-content">
+                            <h3>Jaipur — Amber Fort</h3>
+                            <p>Pink City with Hawa Mahal and City Palace</p>
+                            <!-- Metadata badges. -->
+                            <div class="spot-meta">
+                                <span class="badge badge-time">Oct–Mar</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Destination Card: Udaipur -->
+                    <div class="spot-card">
+                        <div class="spot-img">
+                            <img src="../../images/destinations/spots/udaipur-lake.jpg" alt="Udaipur — Lake Pichola">
+                        </div>
+                        <div class="spot-content">
+                            <h3>Udaipur — Lake Pichola</h3>
+                            <p>Romantic city of lakes with island palaces</p>
+                            <div class="spot-meta">
+                                <span class="badge badge-time">Oct–Mar</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Destination Card: Jaisalmer -->
+                    <div class="spot-card">
+                        <div class="spot-img">
+                            <img src="../../images/destinations/spots/jaisalmer-fort.jpg" alt="Jaisalmer Fort">
+                        </div>
+                        <div class="spot-content">
+                            <h3>Jaisalmer Fort</h3>
+                            <p>The Golden City in the Thar Desert</p>
+                            <div class="spot-meta">
+                                <span class="badge badge-time">Oct–Mar</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Destination Card: Ranthambore -->
+                    <div class="spot-card">
+                        <div class="spot-img">
+                            <img src="../../images/destinations/spots/ranthambore.jpg" alt="Ranthambore">
+                        </div>
+                        <div class="spot-content">
+                            <h3>Ranthambore</h3>
+                            <p>Famous tiger reserve with a fort backdrop</p>
+                            <div class="spot-meta">
+                                <span class="badge badge-time">Oct–Jun</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Destination Card: Pushkar -->
+                    <div class="spot-card">
+                        <div class="spot-img">
+                            <img src="../../images/destinations/spots/pushkar.jpg" alt="Pushkar Lake">
+                        </div>
+                        <div class="spot-content">
+                            <h3>Pushkar Lake</h3>
+                            <p>Sacred lake town with the only Brahma temple in the world</p>
+                            <div class="spot-meta">
+                                <span class="badge badge-time">Oct–Mar</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Lead Capture / Interaction Zone. -->
+        <section class="cta-section section-padding">
+            <div class="container text-center">
+                <a href="../../login.html" class="btn-primary btn-large">Plan a Trip 🤖</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Bar. -->
+    <footer class="footer">
+        <div class="container text-center">
+            <!-- Copyright and Rights clearance. -->
+            <p>&copy; 2026 Travel Planner India. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Script assets: Handle sessions, analytics, or UI behavior. -->
+    <script src="../../session-helper.js"></script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+/* 
+    STATE PAGES THEME:
+    This stylesheet defines the visual identity for detailed state-level pages.
+    It focuses on a professional 'Deep Teal' and 'Golden Amber' color palette.
+*/
+
+/* 
+    Design Tokens:
+    Centralized variables for brand consistency and easy global changes.
+*/
+:root {
+    --state-primary: #0cc0ac;         /* Brighter Teal for Dark Mode contrast. */
+    --state-primary-dark: #09a191;    /* Deep Teal. */
+    --state-secondary: #f5a623;       /* Amber: Used for highlights. */
+    --state-bg: #0f0f0f;              /* Deep background color. */
+    --state-card-bg: #1a1a2e;         /* Elevated card background. */
+    --state-text-primary: #e0e0e0;    /* Light Gray/Off-white for primary text. */
+    --state-text-secondary: #b0b0b0;  /* Muted Gray: Secondary text. */
+    /* Gradient: Linear transition between primary brand colors. */
+    --state-teal-gradient: linear-gradient(135deg, #0cc0ac 0%, #09a191 100%);
+    --state-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);       /* Stronger shadow for dark mode. */
+    --state-shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.6); /* Elevated shadow for interaction. */
+    --state-success: #2ecc71;         /* Brighter green. */
+    --state-warning: #f1c40f;         /* Brighter yellow. */
+    --state-danger: #e74c3c;          /* Brighter red. */
+    --border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Global body overrides for state pages. */
+body {
+    background-color: var(--state-bg);   /* Application of brand background. */
+    color: var(--state-text-primary);    /* Application of primary brand text. */
+    font-family: 'Outfit', sans-serif;   /* Primary sans-serif font for modern feel. */
+}
+
+/* Typography Overrides: Serif for headlines, Sans for body. */
+h1, h2, h3, .playfair {
+    font-family: 'Playfair Display', serif; /* Classic serif for premium Indian theme. */
+    color: #ffffff;
+}
+
+/* 
+    1. BACK BUTTON:
+*/
+.state-page-back-btn {
+    position: sticky;
+    top: 95px;
+    left: 40px;
+    z-index: 999;
+    padding: 10px 24px;
+    background: var(--state-card-bg);
+    color: var(--state-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    margin: 20px 40px;
+}
+
+.state-page-back-btn:hover {
+    background: var(--state-primary);
+    color: white;
+    transform: translateX(-4px);
+    border-color: var(--state-primary);
+}
+
+/* 
+    2. HERO SECTION:
+*/
+.state-hero {
+    height: 55vh;
+    min-height: 400px;
+    background: var(--state-teal-gradient) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    margin-top: 0;
+    color: #ffffff;
+}
+
+.state-hero h1 {
+    font-size: clamp(3.5rem, 8vw, 6rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.state-hero p {
+    font-size: 1.5rem;
+    font-weight: 300;
+    opacity: 0.95;
+    color: #e0e0e0;
+}
+
+/* 
+    3. SECTION TITLES:
+*/
+.section-title {
+    color: var(--state-text-primary);
+    font-size: 2.8rem;
+    position: relative;
+    padding-bottom: 20px;
+    margin-bottom: 3rem;
+}
+
+.section-accent {
+    width: 60px;
+    height: 4px;
+    background: var(--state-primary);
+    margin: 0 auto;
+    border-radius: 2px;
+    margin-top: -15px;
+    margin-bottom: 40px;
+}
+
+/* 
+    4. SPOT CARDS:
+*/
+.spot-card {
+    background: var(--state-card-bg);
+    border-radius: 16px;
+    box-shadow: var(--state-shadow);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    border: 1px solid var(--border-color);
+}
+
+.spot-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--state-shadow-hover);
+    border-color: var(--state-primary);
+}
+
+.spot-img {
+    height: 220px;
+    border-radius: 16px 16px 0 0;
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}
+
+.spot-card:hover .spot-img {
+    opacity: 1;
+}
+
+.spot-content h3 {
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.spot-content p {
+    color: var(--state-text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* 
+    5. BADGES:
+*/
+.badge-time {
+    background: rgba(12, 192, 172, 0.1);
+    color: var(--state-primary);
+    border: 1px solid rgba(12, 192, 172, 0.3);
+}
+
+.spot-meta {
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* 
+    6. CTA BUTTON:
+*/
+.btn-primary.btn-large {
+    background: var(--state-teal-gradient);
+    border: none;
+    color: #ffffff;
+    padding: 18px 50px;
+    font-size: 1.3rem;
+    border-radius: 50px;
+    box-shadow: 0 8px 25px rgba(12, 192, 172, 0.3);
+    transition: all 0.4s ease;
+}
+
+.btn-primary.btn-large:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 35px rgba(12, 192, 172, 0.5);
+    filter: brightness(1.1);
+}
+
+/* Responsive Logic */
+@media (max-width: 768px) {
+    .state-page-back-btn {
+        top: 80px;
+        left: 20px;
+        margin: 15px 20px;
+        padding: 8px 18px;
+        font-size: 0.9rem;
+    }
+}
+
+

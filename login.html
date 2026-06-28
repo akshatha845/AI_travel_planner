@@ -1,0 +1,1205 @@
+<!-- 
+    Document Type Declaration: Tells the browser this is an HTML5 document.
+-->
+<!DOCTYPE html>
+<!-- 
+    Root Element: Contains all HTML content. Primary language set to English.
+-->
+<html lang="en">
+<!-- 
+    Head Section: Contains metadata, styles, and fonts for the login page.
+-->
+<head>
+    <!-- Character Encoding. -->
+    <meta charset="UTF-8">
+    <!-- Responsive Viewport. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Page Title for user identification. -->
+    <title>Login | Join Incredible India</title>
+    <!-- External core styles. -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts import. -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- 
+        Internal Styles: Specific to the Login/Sign-up page layout.
+        Uses a split-screen design (Image/Form).
+    -->
+    <style>
+        /* ── LOGIN PAGE STYLES (DARK MODE) ── */
+        body.login-page {
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            background: #0f0f0f;
+            color: #e0e0e0;
+        }
+
+        body.login-page #main-header {
+            position: relative;
+            background: #1a1a2e;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+            z-index: 100;
+            border-bottom: 1px solid #2a2a40;
+        }
+
+        #login-main {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        .login-image-side {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .login-image-side img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0; left: 0;
+            filter: brightness(0.6);
+        }
+
+        .login-image-side .overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(12,192,172,0.7) 0%, rgba(10,124,110,0.85) 100%);
+        }
+
+        .login-quote {
+            position: relative;
+            z-index: 2;
+            color: #fff;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .login-quote h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 16px;
+            line-height: 1.3;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .login-quote p {
+            font-size: 1.05rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .login-form-side {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 20px;
+            background: #0f0f0f;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 520px;
+        }
+
+        .form-header {
+            margin-bottom: 24px;
+        }
+
+        .form-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin: 0 0 6px;
+        }
+
+        .form-header p {
+            color: #b0b0b0;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .step-indicator {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .step-dot {
+            width: 32px;
+            height: 6px;
+            border-radius: 3px;
+            background: #2a2a40;
+            transition: background 0.3s;
+        }
+
+        .step-dot.active {
+            background: #0cc0ac;
+        }
+
+        .step-text {
+            font-size: 0.82rem;
+            color: #b0b0b0;
+            margin-bottom: 20px;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #e0e0e0;
+            margin-bottom: 6px;
+        }
+
+        .input-control {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid #2a2a40;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.93rem;
+            color: #ffffff;
+            background: #1a1a2e;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .input-control:focus {
+            border-color: #0cc0ac;
+            box-shadow: 0 0 0 3px rgba(12,192,172,0.2);
+            background: #1a1a2e;
+        }
+
+        .input-control::placeholder {
+            color: #666;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .password-field {
+            position: relative;
+        }
+
+        .password-field .input-control {
+            padding-right: 55px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            color: #0cc0ac;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding: 8px 0;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            color: #e0e0e0;
+            cursor: pointer;
+            font-weight: normal !important;
+        }
+
+        .radio-item input[type="radio"],
+        .radio-item input[type="checkbox"] {
+            accent-color: #0cc0ac;
+            width: 16px;
+            height: 16px;
+        }
+
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 6px 0;
+        }
+
+        .chip {
+            padding: 7px 14px;
+            border: 1.5px solid #0cc0ac;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            color: #0cc0ac;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            background: rgba(12,192,172,0.05);
+        }
+
+        .chip:hover {
+            background: rgba(12,192,172,0.15);
+        }
+
+        .chip.selected {
+            background: #0cc0ac;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .section-divider {
+            border: none;
+            border-top: 1px solid #2a2a40;
+            margin: 20px 0;
+        }
+
+        .section-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #0cc0ac;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 14px;
+        }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #0cc0ac, #0a7c6e);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+
+        .btn-submit:hover {
+            box-shadow: 0 6px 25px rgba(12, 192, 172, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-google {
+            width: 100%;
+            padding: 12px;
+            background: #1a1a2e;
+            border: 1.5px solid #2a2a40;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+            color: #ffffff;
+        }
+
+        .btn-google:hover {
+            background: #2a2a40;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.3);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #2a2a40;
+        }
+
+        .toggle-view-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #b0b0b0;
+        }
+
+        .toggle-view-link a {
+            color: #0cc0ac;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .toggle-view-link a:hover {
+            text-decoration: underline;
+        }
+
+        #forgot-msg {
+            color: #0cc0ac;
+            font-size: 0.85rem;
+            text-align: right;
+            display: none;
+            margin-top: -20px;
+            margin-bottom: 15px;
+        }
+
+        footer.footer {
+            background: #1a1a2e;
+            color: #666;
+            text-align: center;
+            padding: 16px;
+            font-size: 0.85rem;
+            border-top: 1px solid #2a2a40;
+        }
+
+        @media (max-width: 768px) {
+            #login-main {
+                flex-direction: column;
+            }
+
+            .login-image-side {
+                min-height: 200px;
+                flex: none;
+            }
+
+            .login-quote h2 {
+                font-size: 1.4rem;
+            }
+
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+
+            .login-form-side {
+                padding: 24px 16px;
+            }
+        }
+
+        .field-error {
+            color: #ff5252;
+            font-size: 0.8rem;
+            margin-top: 4px;
+            display: block;
+            min-height: 1.2em;
+        }
+
+        .input-control.invalid {
+            border-color: #ff5252 !important;
+            background-color: rgba(255, 82, 82, 0.05);
+        }
+
+        .input-control.valid {
+            border-color: #0cc0ac !important;
+        }
+
+        .phone-input-wrapper {
+            display: grid;
+            grid-template-columns: 70px 1fr;
+            gap: 10px;
+        }
+
+        .country-code-pill {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2a2a40;
+            border: 1.5px solid #2a2a40;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.93rem;
+            color: #e0e0e0;
+            font-weight: 600;
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="login-page">
+
+    <!-- 
+        Sticky Navigation: Simple version for account views.
+    -->
+    <header id="main-header">
+        <nav class="navbar">
+            <!-- Site Logo link. -->
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="Travel Planner Logo" class="logo-img">
+            </a>
+            <!-- Links to site content. -->
+            <ul class="nav-links">
+                <li><a href="festivals.html">Festivals</a></li>
+                <li><a href="destinations.html">Destinations</a></li>
+                <li><a href="adventure.html">Adventure</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Content: Split view containing image branding and form interaction. -->
+    <main id="login-main">
+
+        <!-- Left Column: Atmosphere Builder. -->
+        <section class="login-image-side">
+            <!-- India-themed visual background. -->
+            <img src="images/hero-fallback.jpg" alt="India Travel">
+            <!-- Contrast Overlay. -->
+            <div class="overlay"></div>
+            <!-- Value Proposition Quote. -->
+            <div class="login-quote">
+                <h2>Your perfect Indian adventure starts here 🇮🇳</h2>
+                <p>Join our community of travelers and get personalized AI-powered itineraries.</p>
+            </div>
+        </section>
+
+        <!-- Right Column: Account Forms. -->
+        <section class="login-form-side">
+            <!-- Form inner wrapper. -->
+            <div class="form-container">
+
+                <!-- ══════════════ SIGN UP VIEW ══════════════ -->
+                <!-- The primary view for registering a new user. -->
+                <div id="signup-view">
+                    <!-- Heading Area. -->
+                    <div class="form-header">
+                        <h2>Create Your Account</h2>
+                        <p>Let's personalize your journey across India.</p>
+                    </div>
+
+                    <!-- Progress tracking UI. -->
+                    <div class="step-indicator">
+                        <div class="step-dot active" id="dot-1"></div>
+                        <div class="step-dot" id="dot-2"></div>
+                    </div>
+                    <!-- Human readable step count. -->
+                    <div class="step-text" id="step-label">Step 1 of 2: Personal Details</div>
+
+                    <!-- Registration Form. -->
+                    <form id="signup-form">
+
+                        <!-- ── STEP 1: Identification Details ── -->
+                        <div class="form-section active" id="step-1">
+
+                            <!-- Field: Name identification. -->
+                            <div class="form-group">
+                                <label for="full-name">Full Name</label>
+                                <input type="text" id="full-name" class="input-control" placeholder="Enter your full name" required>
+                                <span class="field-error"></span>
+                            </div>
+
+                            <!-- Field: Communication channel. -->
+                            <div class="form-group">
+                                <label for="signup-email">Email Address</label>
+                                <input type="email" id="signup-email" class="input-control" placeholder="name@example.com" required>
+                                <span class="field-error"></span>
+                            </div>
+
+                            <!-- Horizontal Row: Secure Access. -->
+                            <div class="input-row">
+                                <!-- Field: Password creation. -->
+                                <div class="form-group">
+                                    <label for="signup-password">Password</label>
+                                    <div class="password-field">
+                                        <input type="password" id="signup-password" class="input-control" placeholder="Min. 8 characters" required>
+                                        <!-- Visibility toggle for UX convenience. -->
+                                        <span class="toggle-password" onclick="togglePassword('signup-password')">Show</span>
+                                    </div>
+                                    <span class="field-error"></span>
+                                </div>
+                                <!-- Field: Integrity check. -->
+                                <div class="form-group">
+                                    <label for="confirm-password">Confirm Password</label>
+                                    <div class="password-field">
+                                        <input type="password" id="confirm-password" class="input-control" placeholder="Repeat password" required>
+                                        <span class="toggle-password" onclick="togglePassword('confirm-password')">Show</span>
+                                    </div>
+                                    <span class="field-error"></span>
+                                </div>
+                            </div>
+
+                            <!-- Horizontal Row: Geographic location info. -->
+                            <div class="input-row">
+                                <!-- Field: Contact mobile. -->
+                                <div class="form-group">
+                                    <label for="signup-phone">Phone Number</label>
+                                    <div class="phone-input-wrapper">
+                                        <!-- Displays selected country code. -->
+                                        <div class="country-code-pill" id="country-code-display">+91</div>
+                                        <input type="tel" id="signup-phone" class="input-control" placeholder="9876543210" required>
+                                    </div>
+                                    <span class="field-error"></span>
+                                </div>
+                                <!-- Field: Home country. -->
+                                <div class="form-group">
+                                    <label for="signup-country">Country</label>
+                                    <!-- List of common global markets. -->
+                                    <select id="signup-country" class="input-control" required>
+                                        <option value="">Select Country</option>
+                                        <option value="India" selected>🇮🇳 India</option>
+                                        <option value="USA">🇺🇸 USA</option>
+                                        <option value="UK">🇬🇧 UK</option>
+                                        <option value="Australia">🇦🇺 Australia</option>
+                                        <option value="Canada">🇨🇦 Canada</option>
+                                        <option value="UAE">🇦🇪 UAE</option>
+                                        <option value="Singapore">🇸🇬 Singapore</option>
+                                        <option value="Germany">🇩🇪 Germany</option>
+                                        <option value="France">🇫🇷 France</option>
+                                        <option value="Japan">🇯🇵 Japan</option>
+                                        <option value="China">🇨🇳 China</option>
+                                        <option value="Brazil">🇧🇷 Brazil</option>
+                                        <option value="South Africa">🇿🇦 South Africa</option>
+                                        <option value="New Zealand">🇳🇿 New Zealand</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Horizontal Row: Demographic profiling. -->
+                            <div class="input-row">
+                                <!-- Field: Age range. -->
+                                <div class="form-group">
+                                    <label for="age-group">Age Group</label>
+                                    <select id="age-group" class="input-control">
+                                        <option value="18-24">18–24</option>
+                                        <option value="25-34">25–34</option>
+                                        <option value="35-44">35–44</option>
+                                        <option value="45-54">45–54</option>
+                                        <option value="55+">55+</option>
+                                    </select>
+                                </div>
+                                <!-- Field: Biological/Identity grouping. -->
+                                <div class="form-group">
+                                    <label>Gender</label>
+                                    <div class="radio-group">
+                                        <label class="radio-item"><input type="radio" name="gender" value="Male" checked> Male</label>
+                                        <label class="radio-item"><input type="radio" name="gender" value="Female"> Female</label>
+                                        <label class="radio-item"><input type="radio" name="gender" value="Other"> Other</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CTA: Move to Preferences set. -->
+                            <button type="button" class="btn-submit" onclick="nextStep()">Next → Travel Preferences</button>
+                        </div>
+
+                        <!-- ── STEP 2: Customization & AI Context ── -->
+                        <div class="form-section" id="step-2">
+
+                            <!-- Field: Regional context. -->
+                            <div class="form-group">
+                                <label for="based-in">Where are you currently based?</label>
+                                <input type="text" id="based-in" class="input-control" placeholder="e.g. Mumbai, India">
+                            </div>
+
+                            <!-- Field: Audience profile. -->
+                            <div class="form-group">
+                                <label>What type of traveler are you?</label>
+                                <!-- Interactive tags for behavior analysis. -->
+                                <div class="chips-container">
+                                    <div class="chip" onclick="toggleChip(this)">Solo</div>
+                                    <div class="chip" onclick="toggleChip(this)">Couple</div>
+                                    <div class="chip" onclick="toggleChip(this)">Family with Kids</div>
+                                    <div class="chip" onclick="toggleChip(this)">Group of Friends</div>
+                                    <div class="chip" onclick="toggleChip(this)">Business Traveler</div>
+                                    <div class="chip" onclick="toggleChip(this)">Backpacker</div>
+                                </div>
+                            </div>
+
+                            <!-- Field: Interest niche. -->
+                            <div class="form-group">
+                                <label>What is your travel style?</label>
+                                <!-- Multi-select interest pillars. -->
+                                <div class="chips-container">
+                                    <div class="chip" onclick="toggleChip(this)">Adventure & Trekking</div>
+                                    <div class="chip" onclick="toggleChip(this)">Culture & Heritage</div>
+                                    <div class="chip" onclick="toggleChip(this)">Beaches & Relaxation</div>
+                                    <div class="chip" onclick="toggleChip(this)">Wildlife & Nature</div>
+                                    <div class="chip" onclick="toggleChip(this)">Spiritual & Wellness</div>
+                                    <div class="chip" onclick="toggleChip(this)">Food & Culinary</div>
+                                    <div class="chip" onclick="toggleChip(this)">Festivals & Events</div>
+                                    <div class="chip" onclick="toggleChip(this)">Luxury Travel</div>
+                                    <div class="chip" onclick="toggleChip(this)">Budget Travel</div>
+                                </div>
+                            </div>
+
+                            <!-- Horizontal Row: Logistical constraints. -->
+                            <div class="input-row">
+                                <!-- Field: Time bucket. -->
+                                <div class="form-group">
+                                    <label for="duration">Preferred trip duration</label>
+                                    <select id="duration" class="input-control">
+                                        <option value="1-3">Weekend (1–3 days)</option>
+                                        <option value="4-6">Short Trip (4–6 days)</option>
+                                        <option value="7">One Week</option>
+                                        <option value="14">Two Weeks</option>
+                                        <option value="30+">One Month+</option>
+                                    </select>
+                                </div>
+                                <!-- Field: Spending tier. -->
+                                <div class="form-group">
+                                    <label for="budget">Budget per person</label>
+                                    <select id="budget" class="input-control">
+                                        <option value="<10k">Under ₹10,000</option>
+                                        <option value="10k-25k">₹10,000–₹25,000</option>
+                                        <option value="25k-50k">₹25,000–₹50,000</option>
+                                        <option value="50k-1L">₹50,000–₹1,00,000</option>
+                                        <option value=">1L">Above ₹1,00,000</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Field: Stay class preference. -->
+                            <div class="form-group">
+                                <label>Accommodation preference</label>
+                                <!-- Interactive class options. -->
+                                <div class="chips-container">
+                                    <div class="chip" onclick="toggleChip(this)">Budget Hostel</div>
+                                    <div class="chip" onclick="toggleChip(this)">Guesthouse</div>
+                                    <div class="chip" onclick="toggleChip(this)">3-Star Hotel</div>
+                                    <div class="chip" onclick="toggleChip(this)">4–5 Star Hotel</div>
+                                    <div class="chip" onclick="toggleChip(this)">Heritage/Boutique</div>
+                                    <div class="chip" onclick="toggleChip(this)">Homestay</div>
+                                    <div class="chip" onclick="toggleChip(this)">Camping</div>
+                                    <div class="chip" onclick="toggleChip(this)">Houseboat</div>
+                                </div>
+                            </div>
+
+                            <!-- Field: Geographic region of interest. -->
+                            <div class="form-group">
+                                <label>Which regions of India interest you?</label>
+                                <div class="chips-container">
+                                    <div class="chip" onclick="toggleChip(this)">North India</div>
+                                    <div class="chip" onclick="toggleChip(this)">South India</div>
+                                    <div class="chip" onclick="toggleChip(this)">East India</div>
+                                    <div class="chip" onclick="toggleChip(this)">West India</div>
+                                    <div class="chip" onclick="toggleChip(this)">Northeast India</div>
+                                    <div class="chip" onclick="toggleChip(this)">Central India</div>
+                                    <div class="chip" onclick="toggleChip(this)">Himalayan Region</div>
+                                    <div class="chip" onclick="toggleChip(this)">Coastal India</div>
+                                </div>
+                            </div>
+
+                            <!-- Field: Qualitative requirements. -->
+                            <div class="form-group">
+                                <label for="special-needs">Any special needs or requirements? (Optional)</label>
+                                <textarea id="special-needs" class="input-control" rows="2" placeholder="e.g. Vegetarian meals, Wheelchair access..."></textarea>
+                            </div>
+
+                            <!-- Selection: History context. -->
+                            <div class="form-group toggle-row">
+                                <label>Have you visited India before?</label>
+                                <div class="radio-group">
+                                    <label class="radio-item"><input type="radio" name="visited" value="Yes"> Yes</label>
+                                    <label class="radio-item"><input type="radio" name="visited" value="No" checked> No</label>
+                                </div>
+                            </div>
+
+                            <!-- Button group: Back navigation + Creation. -->
+                            <div style="display:flex; gap:15px; margin-top:24px;">
+                                <!-- Revert to step 1. -->
+                                <button type="button" class="btn-submit" style="background:#e0e0e0; color:#333; box-shadow:none;" onclick="prevStep()">← Back</button>
+                                <!-- Official account creation trigger. -->
+                                <button type="submit" class="btn-submit">Create My Account & Start Planning 🚀</button>
+                            </div>
+                        </div>
+
+                    </form>
+
+                    <!-- Nav: Switch to Login flow. -->
+                    <div class="toggle-view-link">
+                        Already have an account? <a href="#" onclick="showLogin()">Login</a>
+                    </div>
+                </div>
+
+                <!-- ══════════════ LOGIN VIEW ══════════════ -->
+                <!-- The access view for existing users. -->
+                <div id="login-view" style="display:none;">
+                    <!-- Login Heading. -->
+                    <div class="form-header">
+                        <h2>Welcome Back 👋</h2>
+                        <p>Login to continue planning your trip.</p>
+                    </div>
+
+                    <!-- Authorization Form. -->
+                    <form id="login-form">
+                        <!-- Identity Field: Name. -->
+                        <div class="form-group">
+                            <label for="login-name">Full Name</label>
+                            <input type="text" id="login-name" class="input-control" placeholder="Enter your full name" required>
+                            <span class="field-error"></span>
+                        </div>
+                        <!-- Identity Field: Email key. -->
+                        <div class="form-group">
+                            <label for="login-email">Email Address</label>
+                            <input type="email" id="login-email" class="input-control" placeholder="name@example.com" required>
+                            <span class="field-error"></span>
+                        </div>
+                        <!-- Identity Field: Security key. -->
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <div class="password-field">
+                                <input type="password" id="login-password" class="input-control" placeholder="Enter your password" required>
+                                <span class="toggle-password" onclick="togglePassword('login-password')">Show</span>
+                            </div>
+                            <span class="field-error"></span>
+                        </div>
+                        <!-- Persistence + Recovery row. -->
+                        <div class="toggle-row" style="margin-bottom:20px;">
+                            <!-- Session persistence option. -->
+                            <label class="radio-item" style="font-weight:normal; font-size:0.9rem;">
+                                <input type="checkbox"> Remember Me
+                            </label>
+                            <!-- Recovery link. -->
+                            <a href="#" style="color:#0a7c6e; font-size:0.9rem; font-weight:600; text-decoration:none;" onclick="forgotPassword()">Forgot Password?</a>
+                        </div>
+                        <!-- Dynamic recovery feedback. -->
+                        <div id="forgot-msg">✅ Reset link sent to your email!</div>
+
+                        <!-- CTA: Access trigger. -->
+                        <button type="submit" class="btn-submit">Login & Start Planning 🚀</button>
+
+                        <!-- Secondary Auth separation. -->
+                        <div class="divider"><span>Or</span></div>
+
+                        <!-- 3rd Party: Google Auth. -->
+                        <button type="button" class="btn-google">
+                            <!-- Social brand icon. -->
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="18" alt="Google">
+                            Continue with Google
+                        </button>
+                    </form>
+
+                    <!-- Nav: Switch to account creation flow. -->
+                    <div class="toggle-view-link">
+                        Don't have an account? <a href="#" onclick="showSignup()">Sign Up</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Page Footer: Bottom anchor. -->
+    <footer class="footer">
+        <div class="container">
+            <!-- Copyright information. -->
+            <p>&copy; 2026 Travel Planner India. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs (Authentication). Must load BEFORE our own script. -->
+    <script type="module">
+        // ── Firebase Setup ───────────────────────────────────────
+        // 1. Import the pieces we need from Firebase's hosted SDK.
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            setDoc
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // 2. PASTE your firebaseConfig object from the Firebase console here:
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeZhonP2b5kAHOoduq_bqhc5_1Wdf4rTw",
+            authDomain: "incredible-india-3798e.firebaseapp.com",
+            projectId: "incredible-india-3798e",
+            storageBucket: "incredible-india-3798e.firebasestorage.app",
+            messagingSenderId: "951233278790",
+            appId: "1:951233278790:web:630a11883549dbeae0ab47"
+        };
+
+        // 3. Initialize Firebase and grab the Auth + Firestore services.
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // 4. Make these available to the regular (non-module) script below.
+        window.firebaseAuth = auth;
+        window.firebaseCreateUser = createUserWithEmailAndPassword;
+        window.firebaseSignIn = signInWithEmailAndPassword;
+        window.firebaseDb = db;
+        window.firebaseDoc = doc;
+        window.firebaseSetDoc = setDoc;
+    </script>
+
+    <!-- Logic: Interaction handlers and Validation. -->
+    <script>
+        /**
+         * ── FORM VALIDATION & STATE LOGIC ────────────────────────
+         * This script manages the multi-step registration flow, input verification,
+         * and the transition between Login and Signup modes.
+         */
+
+        // Reference Map: Application forms.
+        const forms = {
+            signup: document.getElementById('signup-form'),
+            login: document.getElementById('login-form')
+        };
+
+        // Reference Map: Interactive input elements.
+        const fields = {
+            fullName: document.getElementById('full-name'),
+            signupEmail: document.getElementById('signup-email'),
+            signupCountry: document.getElementById('signup-country'),
+            countryCodeDisplay: document.getElementById('country-code-display'),
+            signupPhone: document.getElementById('signup-phone'),
+            signupPassword: document.getElementById('signup-password'),
+            confirmPassword: document.getElementById('confirm-password'),
+            ageGroup: document.getElementById('age-group'),
+            basedIn: document.getElementById('based-in'),
+            duration: document.getElementById('duration'),
+            budget: document.getElementById('budget'),
+            specialNeeds: document.getElementById('special-needs'),
+            loginName: document.getElementById('login-name'),
+            loginEmail: document.getElementById('login-email'),
+            loginPassword: document.getElementById('login-password')
+        };
+
+        // UI State: Track fields visited by user to prevent premature error messages.
+        const touchedFields = new Set();
+
+        // Regex Patterns: Verification constants for data integrity.
+        const patterns = {
+            name: /^[A-Za-z\s]{2,}$/, // At least two chars, letters/space only.
+            email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/, // RFC compliant email logic.
+            password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{8,}$/ // Complex requirements.
+        };
+
+        /**
+         * PHYISCAL INPUT BLOCKER:
+         * Prevents non-complying characters from being typed in specific fields.
+         */
+        fields.fullName.addEventListener('keydown', (e) => blockInvalidChars(e, /^[A-Za-z\s]$/));
+        fields.loginName.addEventListener('keydown', (e) => blockInvalidChars(e, /^[A-Za-z\s]$/));
+        fields.signupPhone.addEventListener('keydown', (e) => blockInvalidChars(e, /^[0-9]$/));
+
+        /**
+         * @function blockInvalidChars
+         * @description Filters keystrokes based on a whitelist regex.
+         */
+        function blockInvalidChars(e, allowedRegex) {
+            // Allow structural control keys (Backspace, Tab, Enter, etc.) to function normally.
+            if (e.key.length > 1 || e.ctrlKey || e.metaKey || e.altKey) return;
+            
+            // If the character doesn't match the whitelist, prevent input.
+            if (!allowedRegex.test(e.key)) {
+                e.preventDefault();
+            }
+        }
+
+        // Configuration Map: Country-specific dial codes.
+        const countryCodes = {
+            "India": "+91",
+            "USA": "+1",
+            "UK": "+44",
+            "Australia": "+61",
+            "Canada": "+1",
+            "UAE": "+971",
+            "Singapore": "+65",
+            "Germany": "+49",
+            "France": "+33",
+            "Japan": "+81",
+            "China": "+86",
+            "Brazil": "+55",
+            "South Africa": "+27",
+            "New Zealand": "+64"
+        };
+
+        // ── Validation Core ──────────────────────────────
+        function validateField(field) {
+            const id = field.id;
+            const val = field.value.trim();
+            let isValid = true;
+            let errorMsg = "";
+
+            if (id === 'full-name' || id === 'login-name') {
+                isValid = patterns.name.test(val);
+                errorMsg = "❌ Invalid name. Use letters and spaces only (min 2 characters).";
+            } 
+            else if (id === 'signup-email' || id === 'login-email') {
+                isValid = patterns.email.test(val);
+                errorMsg = "❌ Invalid email address. Enter a valid Gmail or email (e.g. name@gmail.com).";
+            } 
+            else if (id === 'signup-phone') {
+                isValid = val.length === 10 && /^\d+$/.test(val);
+                // The prompt specified this exact string and optionality was lost in earlier iterations 
+                // but if there is no value, no error, so let's check it. Wait, the prompt says "Phone number is wrong -> ..."
+                if (val === "" && id === 'signup-phone') {
+                    // It was mostly optional based on previous task, but let's enforce based on feedback or keep it simple
+                    // Wait, the prompt said "If filled, must be 10 digits".
+                    // Let's refine: if it's optional, then empty is valid. Wait, it currently has 'required' in HTML.
+                }
+                errorMsg = "❌ Invalid phone number. Enter exactly 10 digits.";
+            } 
+            else if (id === 'signup-password' || id === 'login-password') {
+                isValid = patterns.password.test(val);
+                errorMsg = "❌ Invalid password. Must be 8+ characters with uppercase, lowercase, number and special character.";
+                // Also trigger confirm password re-validation if we are on signup
+                if (id === 'signup-password' && fields.confirmPassword.value) {
+                    validateField(fields.confirmPassword);
+                }
+            } 
+            else if (id === 'confirm-password') {
+                isValid = val === fields.signupPassword.value && val !== "";
+                errorMsg = "❌ Passwords do not match.";
+            }
+
+            // Since signup-phone is optional in previous requirements but has "required" in HTML,
+            // let's check if there's any ambiguity. The HTML I replaced had 'required'. I will leave it as is 
+            // since the user didn't mention making it optional in this specific prompt (just exact messages).
+            if(id === 'signup-phone' && val === '') {
+                isValid = false; // it is required in HTML
+            }
+
+            updateUI(field, isValid, errorMsg);
+            return isValid;
+        }
+
+        function updateUI(field, isValid, message) {
+            const errorSpan = field.closest('.form-group').querySelector('.field-error');
+            if (isValid) {
+                field.classList.remove('invalid');
+                field.classList.add('valid');
+                if (errorSpan) errorSpan.textContent = "";
+            } else {
+                field.classList.remove('valid');
+                field.classList.add('invalid');
+                if (errorSpan) errorSpan.textContent = message;
+            }
+        }
+
+        // ── Event Listeners ─────────────────────────────
+        Object.values(fields).forEach(field => {
+            if (!field) return;
+            
+            field.addEventListener('blur', () => {
+                touchedFields.add(field.id);
+                validateField(field);
+            });
+
+            field.addEventListener('input', () => {
+                if (touchedFields.has(field.id)) {
+                    validateField(field);
+                }
+            });
+        });
+
+        // ── View Switching ──────────────────────────────
+        function showLogin() {
+            document.getElementById('signup-view').style.display = 'none';
+            document.getElementById('login-view').style.display = 'block';
+        }
+
+        function showSignup() {
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('signup-view').style.display = 'block';
+        }
+
+        // ── Navigation & Submission ──────────────────────
+        function nextStep() {
+            const step1Fields = [fields.fullName, fields.signupEmail, fields.signupPassword, fields.confirmPassword, fields.signupPhone];
+            let isStepValid = true;
+
+            step1Fields.forEach(field => {
+                touchedFields.add(field.id);
+                if (!validateField(field)) {
+                    isStepValid = false;
+                }
+            });
+
+            if (!isStepValid) return;
+
+            document.getElementById('step-1').classList.remove('active');
+            document.getElementById('step-2').classList.add('active');
+            document.getElementById('dot-1').classList.remove('active');
+            document.getElementById('dot-2').classList.add('active');
+            document.getElementById('step-label').textContent = 'Step 2 of 2: Travel Preferences';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function prevStep() {
+            document.getElementById('step-2').classList.remove('active');
+            document.getElementById('step-1').classList.add('active');
+            document.getElementById('dot-2').classList.remove('active');
+            document.getElementById('dot-1').classList.add('active');
+            document.getElementById('step-label').textContent = 'Step 1 of 2: Personal Details';
+        }
+
+        function toggleChip(el) {
+            el.classList.toggle('selected');
+        }
+
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            const btn = input.nextElementSibling;
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = 'Hide';
+            } else {
+                input.type = 'password';
+                btn.textContent = 'Show';
+            }
+        }
+
+        function forgotPassword() {
+            const emailField = fields.loginEmail;
+            touchedFields.add(emailField.id);
+            if (!validateField(emailField)) return;
+            document.getElementById('forgot-msg').style.display = 'block';
+        }
+
+        forms.signup.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Perform final validation check
+            const allInputs = [fields.fullName, fields.signupEmail, fields.signupPassword, fields.confirmPassword, fields.signupPhone];
+            let isValid = true;
+            allInputs.forEach(input => {
+                touchedFields.add(input.id);
+                if (!validateField(input)) isValid = false;
+            });
+
+            if (!isValid) return;
+
+            const email = fields.signupEmail.value.trim();
+            const password = fields.signupPassword.value;
+            const name = fields.fullName.value.trim() || 'Traveler';
+
+            // ── Step 1: Create the login account in Firebase Auth ───
+            window.firebaseCreateUser(window.firebaseAuth, email, password)
+                .then((userCredential) => {
+                    // Success! Firebase Auth created the account.
+                    // userCredential.user.uid is this person's unique ID —
+                    // we use it to label their record in Firestore.
+                    const uid = userCredential.user.uid;
+
+                    // ── Step 2: Save all the OTHER details in Firestore ──
+                    const userProfile = {
+                        fullName: name,
+                        email: email,
+                        country: fields.signupCountry ? fields.signupCountry.value : '',
+                        phone: fields.signupPhone.value.trim(),
+                        ageGroup: fields.ageGroup ? fields.ageGroup.value : '',
+                        basedIn: fields.basedIn ? fields.basedIn.value.trim() : '',
+                        preferredDuration: fields.duration ? fields.duration.value : '',
+                        budget: fields.budget ? fields.budget.value : '',
+                        specialNeeds: fields.specialNeeds ? fields.specialNeeds.value.trim() : '',
+                        createdAt: new Date().toISOString()
+                    };
+
+                    // "users" is the collection name (like a folder), uid is this
+                    // person's unique document name (like a file) inside it.
+                    window.firebaseSetDoc(window.firebaseDoc(window.firebaseDb, 'users', uid), userProfile)
+                        .then(() => {
+                            localStorage.setItem('loggedIn', 'true');
+                            localStorage.setItem('userName', name);
+                            localStorage.setItem('userEmail', email);
+                            localStorage.setItem('justSignedUp', 'true');
+                            window.location.href = 'index.html';
+                        })
+                        .catch((firestoreError) => {
+                            // Account was created but profile save failed —
+                            // still let them in, since login itself worked.
+                            console.error('Could not save extra profile details:', firestoreError);
+                            localStorage.setItem('loggedIn', 'true');
+                            localStorage.setItem('userName', name);
+                            localStorage.setItem('userEmail', email);
+                            localStorage.setItem('justSignedUp', 'true');
+                            window.location.href = 'index.html';
+                        });
+                })
+                .catch((error) => {
+                    // Show Firebase's error message in the email field's error span.
+                    const errorSpan = fields.signupEmail.closest('.form-group').querySelector('.field-error');
+                    if (error.code === 'auth/email-already-in-use') {
+                        errorSpan.textContent = '❌ This email is already registered. Try logging in instead.';
+                    } else if (error.code === 'auth/weak-password') {
+                        errorSpan.textContent = '❌ Password is too weak.';
+                    } else {
+                        errorSpan.textContent = '❌ ' + error.message;
+                    }
+                    fields.signupEmail.classList.add('invalid');
+                });
+        });
+
+        forms.login.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const loginFields = [fields.loginName, fields.loginEmail, fields.loginPassword];
+            let isValid = true;
+            loginFields.forEach(field => {
+                touchedFields.add(field.id);
+                if (!validateField(field)) isValid = false;
+            });
+
+            if (!isValid) return;
+
+            const email = fields.loginEmail.value.trim();
+            const password = fields.loginPassword.value;
+            const name = fields.loginName.value.trim() || 'Traveler';
+
+            // ── Check credentials against Firebase ──────────────
+            window.firebaseSignIn(window.firebaseAuth, email, password)
+                .then((userCredential) => {
+                    // Correct email + password combo found in the database.
+                    localStorage.setItem('loggedIn', 'true');
+                    localStorage.setItem('userName', name);
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('justLoggedIn', 'true');
+                    window.location.href = 'index.html';
+                })
+                .catch((error) => {
+                    const errorSpan = fields.loginPassword.closest('.form-group').querySelector('.field-error');
+                    if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                        errorSpan.textContent = '❌ Incorrect email or password.';
+                    } else {
+                        errorSpan.textContent = '❌ ' + error.message;
+                    }
+                    fields.loginPassword.classList.add('invalid');
+                });
+        });
+    </script>
+
+</body>
+</html>

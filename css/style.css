@@ -1,0 +1,2680 @@
+/* ===== RESET & BASE STYLES ===== 
+   Ensures consistent rendering across different browsers by removing default margins/paddings. 
+*/
+* {
+    /* Set margin and padding to 0 for every element to avoid browser-specific default spacing. */
+    margin: 0;
+    padding: 0;
+    /* 'border-box' ensures padding and border are included in the element's total width/height. */
+    box-sizing: border-box;
+}
+
+:root {
+    /* Updated Dark Mode Palette */
+    --primary-color: #0cc0ac; /* Brighter Teal for better contrast in Dark Mode. */
+    --secondary-color: #f5a623; /* Warm Amber for highlights. */
+    --dark-bg: #0f0f0f; /* Deep background color for the overall page. */
+    --card-bg: #1a1a2e; /* Slightly elevated background for cards and components. */
+    --light-gray: #121212; /* Dark alternate background for sections. */
+    --text-color: #e0e0e0; /* Off-white text for high readability and reduced eye strain. */
+    --text-muted: #b0b0b0; /* Dimmed text for secondary information. */
+    --border-color: rgba(255, 255, 255, 0.1); /* Subtle borders to define boundaries. */
+    --overlay-dark: rgba(0, 0, 0, 0.7); /* Deep overlay for hero sections. */
+    --glass-bg: rgba(26, 26, 46, 0.85); /* Glassmorphic background for navigation and overlays. */
+}
+
+html {
+    /* Enables smooth scrolling animation when clicking anchor links (#section). */
+    scroll-behavior: smooth;
+}
+
+body {
+    /* Global typography settings using 'Outfit' font for a modern, clean aesthetic. */
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--dark-bg); /* Dark Mode Background */
+    color: var(--text-color);
+    line-height: 1.6; /* Optimal line height for readability. */
+    /* Prevents unwanted horizontal scrolling on mobile due to animations. */
+    overflow-x: hidden;
+}
+
+.container {
+    /* Standard layout wrapper to center content and set a maximum readable width. */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ===== NAVIGATION ===== 
+   Global Header logic, including glassmorphism and scroll-triggered states.
+*/
+#main-header {
+    /* Fixed positioning keeps the nav bar visible even when scrolling. */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* High z-index ensures it stays above all other content. */
+    transition: all 0.3s ease; /* Smooth transition for background color changes. */
+}
+
+.navbar {
+    /* Flexbox layout for horizontal alignment of logo and links. */
+    display: flex;
+    justify-content: space-between; /* Logo on left, links on right. */
+    align-items: center; /* Vertical centering. */
+    padding: 15px 40px;
+    background: transparent; /* Initially transparent for the hero section. */
+    transition: background 0.3s ease;
+    min-height: 90px;
+}
+
+/* State when the user scrolls down more than 50px (triggered in app.js). */
+#main-header.scrolled .navbar {
+    /* Becomes a dark glassmorphic background with transparency. */
+    background: var(--glass-bg);
+    /* Subtle shadow for depth when the header is floating over content. */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    /* Add a blurred backdrop effect for a premium feel. */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.logo {
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    height: 85px; /* Increased from 70px to better fill the navbar. */
+    width: auto; /* Set to auto to scale proportionally. */
+    /* Maintain aspect ratio while filling the container. */
+    display: block;
+    object-fit: contain;
+    transition: all 0.3s ease;
+    /* In dark mode, we might need a subtle glow or brightness adjustment if the logo is dark. */
+    filter: brightness(1.1);
+}
+
+.logo:hover .logo-img {
+    /* Micro-animation on logo hover for premium interactive feel. */
+    opacity: 0.85;
+    transform: scale(1.05);
+}
+
+.logo:hover {
+    text-decoration: none;
+}
+
+#main-header.scrolled .logo {
+    /* Changes logo color context when background turns dark. */
+    color: var(--primary-color);
+}
+
+.nav-links {
+    /* Flex grouping for navigation menu items. */
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-links a {
+    /* Nav link styling - light for better visibility on dark backgrounds. */
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+/* Override nav link color when header background is scrolled. */
+#main-header.scrolled .nav-links a {
+    color: var(--text-color);
+}
+
+.nav-links a:hover {
+    color: var(--primary-color);
+}
+
+.hamburger {
+    /* Hidden by default on desktop; visible via media queries on mobile. */
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger .bar {
+    /* The individual lines of the hamburger icon. */
+    width: 25px;
+    height: 3px;
+    background: var(--text-color);
+    margin: 3px 0;
+    transition: 0.3s;
+}
+
+/* Change hamburger color to match scrolled header background. */
+#main-header.scrolled .hamburger .bar {
+    background: var(--text-color);
+}
+
+.btn-primary {
+    /* Standard reusable primary button component. */
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    /* Hover state: darker shade, lift effect, and shadow glow. */
+    background: #09a191; /* Darker teal for active state. */
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(12, 192, 172, 0.4);
+}
+
+/* ===== HERO SECTION ===== 
+   Full-screen introductory section with background video.
+ */
+#hero {
+    position: relative;
+    height: 100vh; /* Occupies exactly 100% of the viewport height. */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Clips the background video edges. */
+    background-color: var(--dark-bg);
+}
+
+.video-container {
+    /* Absolute positioning to cover the entire hero area background. */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#hero-video {
+    /* Ensures the video fills the container like 'background-size: cover'. */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.6; /* Reduced opacity to darken the video further for dark mode. */
+}
+
+.overlay {
+    /* Dark gradient layer over the video to ensure text is legible. */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8));
+}
+
+.hero-content {
+    /* The text/button layer sitting on top of video and overlay. */
+    position: relative;
+    z-index: 2; /* Ensures content is above the video and overlay. */
+    text-align: center;
+    color: var(--text-color);
+    max-width: 900px;
+    padding: 0 20px;
+}
+
+.badge {
+    /* Small UI element for specific callouts like 'AI-Powered'. */
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.05); /* Very subtle glass effect. */
+    /* Blur effect creates a glassmorphism style. */
+    backdrop-filter: blur(10px);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--primary-color);
+}
+
+.hero-content h1 {
+    /* Primary large heading font. */
+    font-family: 'Playfair Display', serif;
+    font-size: 64px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    color: white; /* Keep white for maximum contrast in hero. */
+}
+
+.hero-content>p {
+    /* Hero sub-text. */
+    font-size: 20px;
+    margin-bottom: 40px;
+    opacity: 0.95;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+.email-form {
+    /* Layout for the horizontal waitlist sign-up form. */
+    display: flex;
+    gap: 15px;
+    max-width: 600px;
+    margin: 0 auto 20px;
+}
+
+.email-form input {
+    /* Primary input field styling. */
+    flex: 1; /* Takes up remaining space in flex container. */
+    padding: 15px 25px;
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    font-size: 16px;
+    background: var(--card-bg);
+    color: var(--text-color);
+}
+
+.email-form input:focus {
+    /* Accessibility: clear visual cue when field is selected. */
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(12, 192, 172, 0.2);
+}
+
+.small-text {
+    /* Tertiary text for less important details. */
+    font-size: 14px;
+    opacity: 0.8;
+    color: var(--text-muted);
+}
+
+/* ===== SECTION STYLES ===== 
+   Global spacing and heading utilities.
+ */
+.section-padding {
+    /* Vertical space between sections for breathing room. */
+    padding: 80px 0;
+}
+
+.section-title {
+    /* Global style for section headers. */
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.subtitle {
+    /* Small explanatory text below a section title. */
+    text-align: center;
+    font-size: 18px;
+    color: var(--text-muted);
+    max-width: 700px;
+    margin: -20px auto 50px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.bg-light {
+    background: var(--light-gray);
+}
+
+.bg-pattern {
+    background: var(--dark-bg);
+}
+
+/* ===== FESTIVAL SECTION ===== 
+   Grid layout for discoverable festival cards.
+*/
+.festivals-section {
+    padding: 80px 0;
+    background: var(--light-gray);
+}
+
+.festival-grid {
+    /* 3-column grid for festival summary cards. */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.festival-card {
+    /* Individual card container with image background. */
+    position: relative;
+    aspect-ratio: 4/3; /* Enforces a standard cinematic ratio. */
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    transition: all 0.4s ease;
+    background: var(--card-bg);
+}
+
+.festival-card:hover {
+    /* Interactive lift effect. */
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* Festival Card Background Images 
+   These backgrounds are targeted specifically for each cultural theme.
+*/
+.festival-card-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s ease;
+    opacity: 0.8; /* Slightly dimmed for dark mode. */
+}
+
+.festival-card:hover .festival-card-img {
+    /* Zoom effect on card background. */
+    transform: scale(1.08); /* Slight enlargement creates focus and depth. */
+    opacity: 1;
+}
+
+.item-diwali .festival-card-img {
+    /* Background for the Festival of Lights. */
+    background-image: url('../images/festivals/diwali.jpg');
+}
+
+.item-holi .festival-card-img {
+    /* Background for the Festival of Colors. */
+    background-image: url('../images/festivals/holi.jpg');
+}
+
+.item-durga-puja .festival-card-img {
+    /* Background for Durga Puja heritage. */
+    background-image: url('../images/festivals/durga-puja.jpg');
+}
+
+.item-pushkar .festival-card-img {
+    /* Background for the Pushkar Camel Fair. */
+    background-image: url('../images/festivals/pushkar-fair.jpg');
+}
+
+.item-onam .festival-card-img {
+    /* Background for Kerala's harvest festival. */
+    background-image: url('../images/festivals/onam.jpg');
+}
+
+.item-ganesh .festival-card-img {
+    /* Background for Ganesh Chaturthi. */
+    background-image: url('../images/festivals/ganesh-chaturthi.jpg');
+}
+
+/* Festival Card Overlay 
+   Creates a darkened area at the bottom of the card so that white text remains legible regardless of the image content.
+*/
+.festival-card::before {
+    content: ''; /* Mandatory for pseudo-elements. */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70%;
+    /* Subtle gradient transition from dark at the bottom to transparent. */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%);
+    z-index: 1; /* Sits above the image but below the content. */
+    transition: all 0.3s ease;
+}
+
+.festival-card:hover::before {
+    /* Deepens the overlay on hover to intensify the card's visual weight. */
+    background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.7) 70%, rgba(0, 0, 0, 0.4) 100%);
+}
+
+/* Season Badge 
+   A decorative label that informs the user about the peak visiting season.
+*/
+.season-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--primary-color);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 2; /* Ensures it stays visible on top of the overlay and image. */
+    /* Small shadow to make the badge pop from the background. */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Festival Card Content 
+   Container for the title, subtitle, and description.
+*/
+.festival-card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 25px;
+    z-index: 2;
+    color: var(--text-color);
+}
+
+.festival-card-content h3 {
+    /* Card title font - serif for an elegant and cultural aesthetic. */
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    font-family: 'Playfair Display', serif;
+    color: white;
+}
+
+.festival-subtitle {
+    /* Secondary text within the card, usually the location or date. */
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 8px;
+}
+
+.festival-desc {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.4;
+}
+
+/* Explore Button */
+.explore-festival-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    color: var(--primary-color);
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 15px;
+    opacity: 0;
+    z-index: 3;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+.festival-card:hover .explore-festival-btn {
+    opacity: 1;
+}
+
+.explore-festival-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+/* ===== EXPERIENCES SECTION ===== */
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.experience-card {
+    background: white;
+    padding: 40px 25px;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.experience-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.icon-box {
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+.experience-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--dark-color);
+}
+
+.experience-card p {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* ===== SEASONS SECTION ===== */
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.season-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.season-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.season-header {
+    padding: 30px;
+    color: white;
+    text-align: center;
+}
+
+.season-header.winter {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.season-header.summer {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.season-header.monsoon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.season-header h3 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.season-header span {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.season-body {
+    padding: 25px;
+}
+
+.season-body .highlight {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.season-body p {
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* ===== ITINERARIES SECTION ===== */
+.itinerary-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.itinerary-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    border-color: var(--primary-color);
+}
+
+.card-image-placeholder {
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.8; /* Dimmed for dark mode. */
+}
+
+.item-goldentriangle {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url('https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600');
+}
+
+.item-keralabackwaters {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url('https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=600');
+}
+
+.item-rajasthan {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url('https://images.unsplash.com/photo-1599661046289-e31897846e41?w=600');
+}
+
+.itinerary-card .card-content {
+    padding: 25px;
+}
+
+.duration {
+    display: inline-block;
+    background: rgba(12, 192, 172, 0.1);
+    color: var(--primary-color);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.itinerary-card h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.route {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.itinerary-card hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 20px 0;
+}
+
+.btn-outline {
+    width: 100%;
+    padding: 10px 20px;
+    border: 2px solid var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* ===== TESTIMONIALS ===== */
+.testimonial-card {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.testimonial-card:hover {
+    /* Subtly reacts to mouse interaction. */
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    border-color: var(--primary-color);
+}
+
+.quote {
+    /* Styled for blockquote-style text. */
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-color);
+    margin-bottom: 25px;
+    font-style: italic;
+}
+
+.author {
+    /* Flex alignment for author image and name. */
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.avatar {
+    /* Placeholder or container for author profile image. */
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0cc0ac, #0a7c6e);
+}
+
+.author h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 3px;
+}
+
+.author span {
+    font-size: 14px;
+    color: #999;
+}
+
+/* ===== CTA SECTION ===== 
+   Final Call-to-Action section at the bottom of the page.
+*/
+.gradient-bg {
+    /* Vibrant branded gradient to catch the eye before leaving the page. */
+    background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+    color: white;
+}
+
+.gradient-bg h2 {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.gradient-bg p {
+    font-size: 20px;
+    margin-bottom: 30px;
+    opacity: 0.95;
+}
+
+.btn-large {
+    padding: 15px 50px;
+    font-size: 18px;
+}
+
+/* ===== FOOTER ===== */
+footer {
+    background: var(--dark-color);
+    color: white;
+    padding: 60px 0 30px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-logo {
+    font-size: 28px;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.footer-section h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 12px;
+}
+
+.footer-links a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: var(--primary-color);
+}
+
+.contact-email {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 15px;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+    font-size: 24px;
+}
+
+.social-links span {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.social-links span:hover {
+    transform: scale(1.2);
+}
+
+.copyright {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+}
+
+/* ===== ANIMATIONS ===== */
+.fade-in-section {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1024px) {
+    .festival-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-links {
+        position: fixed;
+        right: -100%;
+        top: 70px;
+        flex-direction: column;
+        background: white;
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+        padding: 20px 0;
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .nav-links a {
+        color: var(--dark-color);
+    }
+
+    .hero-content h1 {
+        font-size: 40px;
+    }
+
+    .email-form {
+        flex-direction: column;
+    }
+
+    .festival-grid,
+    .grid-3,
+    .grid-4 {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .section-title {
+        font-size: 32px;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .navbar {
+        min-height: 70px;
+    }
+
+    .logo-img {
+        height: 60px; /* Increased from 50px to meet the at-least 60px requirement. */
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 32px;
+    }
+
+    .section-padding {
+        padding: 50px 0;
+    }
+
+    .subtitle {
+        font-size: 16px;
+    }
+}
+
+/* 1. PROFESSIONAL FESTIVAL TRAVEL GUIDES */
+.guides-section {
+    background: white;
+    padding: 80px 0;
+}
+
+.guides-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+}
+
+.guide-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.guide-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.guide-image {
+    position: relative;
+    height: 250px;
+    width: 100%;
+    overflow: hidden;
+    /* Use background-image from inline style via ::before */
+    background-image: inherit;
+}
+
+/* Clever zoom effect that works with existing inline style background-image */
+.guide-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: inherit;
+    /* This will inherit the background-image from the inline style on .guide-image */
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s ease;
+    z-index: 1;
+}
+
+.guide-card:hover .guide-image::before {
+    transform: scale(1.08);
+}
+
+.guide-category {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: #FF6B35;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+}
+
+.guide-content {
+    padding: 25px;
+    background: white;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.duration-badge {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 12px;
+    width: fit-content;
+}
+
+.guide-content h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.guide-subtitle {
+    font-size: 15px;
+    color: #FF6B35;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.guide-content p {
+    /* Body text for guide descriptions. */
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 1024px) {
+    .guides-grid {
+        gap: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .guides-grid {
+        /* Single column for phones. */
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .guides-section {
+        padding: 60px 20px;
+    }
+}
+
+/* 2. SEASONAL FESTIVALS SECTION 
+   Cards representing Different travel periods (Winter, Summer, Monsoon).
+*/
+.festival-seasons {
+    background-color: #f8f9fa;
+    padding: 80px 0;
+}
+
+.festival-seasons-grid {
+    /* 3-column grid for seasonal periods. */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.season-festival-card {
+    /* Large colorful card with centered text. */
+    min-height: 300px;
+    padding: 40px;
+    border-radius: 16px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.season-festival-card:hover {
+    /* Hover lift effect for seasonal cards. */
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.season-emoji {
+    /* Large visual icon for the season. */
+    font-size: 70px;
+    margin-bottom: 20px;
+}
+
+.season-festival-card h3 {
+    /* Seasonal title styling. */
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.season-range {
+    /* Text showing the date range (e.g., 'Nov - Feb'). */
+    font-size: 16px;
+    opacity: 0.95;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.festivals-list {
+    /* Emphasized list of festival names. */
+    font-size: 15px;
+    font-weight: 700;
+    margin: 15px 0;
+    letter-spacing: 1px;
+}
+
+.season-desc {
+    /* Descriptive text for the season. */
+    font-size: 15px;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+/* Seasonal Gradients 
+   Distinct colorful backgrounds for each season.
+*/
+.winter-card {
+    /* Blue-purple gradient for winter. */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.summer-card {
+    /* Pink-red gradient for summer. */
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.monsoon-card {
+    /* Cyan-blue gradient for monsoon. */
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+@media (max-width: 768px) {
+    .festival-seasons-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .festival-seasons {
+        padding: 60px 20px;
+    }
+}
+
+/* 3. FESTIVAL SPECIAL FEATURES 
+   Icons boxes highlighting unique aspects of festivals.
+*/
+.festival-special {
+    background: white;
+    padding: 80px 0;
+}
+
+.special-features-grid {
+    /* 4-column layout for diverse feature highlights. */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+.feature-box {
+    background: #f8f9fa;
+    padding: 35px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.feature-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.feature-box .feature-emoji {
+    font-size: 64px;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.feature-box h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 12px;
+}
+
+.feature-box p {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+    .special-features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .special-features-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+/* 5. ENHANCED TESTIMONIALS SECTION 
+   Card-based reviews with avatars and star ratings.
+*/
+.testimonials-section {
+    /* White background section for testimonials. */
+    background: white;
+    padding: 80px 0;
+}
+
+.testimonials-grid {
+    /* 3-column layout for reviews. */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.testimonial-card {
+    /* Clean white card with vertical flex layout. */
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    position: relative;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.testimonial-quote {
+    font-style: italic;
+    font-size: 16px;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: auto;
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* Avatar Gradients */
+.sarah-avatar {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.michael-avatar {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.emma-avatar {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.author-info h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.author-info p {
+    font-size: 14px;
+    color: #999;
+    margin: 3px 0 0 0;
+}
+
+.stars {
+    font-size: 16px;
+    margin-top: 10px;
+    letter-spacing: 2px;
+}
+
+@media (max-width: 768px) {
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+/* 6. BACK TO TOP BUTTON */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background-color: #FF6B35;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.back-to-top:hover {
+    background-color: #e85a20;
+    transform: scale(1.1);
+}
+
+/* 7. MOBILE MENU UPGRADES */
+.nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 997;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Hamburger X Animation */
+#hamburger.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+}
+
+#hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+#hamburger.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+}
+
+/* Side Menu Slide Control */
+@media (max-width: 768px) {
+    .nav-links {
+        position: fixed;
+        right: -100%;
+        top: 0;
+        height: 100vh;
+        width: 70%;
+        max-width: 300px;
+        background: white;
+        flex-direction: column;
+        padding-top: 100px;
+        z-index: 998;
+        transition: right 0.3s ease;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+}
+
+/* 8. FORM & ANIMATION POLISH */
+.form-status {
+    margin-top: 15px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    height: 20px;
+}
+
+.form-status.success {
+    color: #2ecc71;
+}
+
+.form-status.error {
+    color: #e74c3c;
+}
+
+.form-status.loading {
+    color: #FF6B35;
+}
+
+/* Refined Viewport Animation */
+.fade-in-section {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.nav-links a.active {
+    color: #FF6B35 !important;
+    font-weight: 700;
+}
+
+/* 9. HERO SECTION REFINEMENT */
+.hero-content {
+    text-align: center;
+    max-width: 800px;
+}
+
+.hero-content h1 {
+    margin: 25px 0;
+}
+
+.hero-content p {
+    margin-bottom: 40px;
+}
+
+.hero-actions {
+    margin-bottom: 30px;
+}
+
+.btn-hero {
+    padding: 18px 45px !important;
+    font-size: 18px !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+/* 10. FESTIVALS PAGE HERO */
+.festivals-hero {
+    height: 60vh;
+    background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    padding: 80px 20px;
+}
+
+.festivals-hero h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.festivals-hero p {
+    font-size: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* 10. ICONIC DESTINATIONS SECTION */
+.destination-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.destination-card {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 12px;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+}
+
+.destination-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(12, 192, 172, 0.2);
+    border-color: var(--primary-color);
+}
+
+.dest-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 10px rgba(12, 192, 172, 0.2));
+}
+
+.dest-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.badge-heritage { background: #9b59b6; }
+.badge-nature { background: #27ae60; }
+.badge-beach { background: #3498db; }
+.badge-adventure { background: #e67e22; }
+.badge-spiritual { background: #f1c40f; }
+
+.destination-card h3 {
+    font-size: 22px;
+    margin-bottom: 5px;
+    color: white;
+}
+
+.dest-location {
+    color: var(--primary-color);
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.dest-desc {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+@media (max-width: 992px) {
+    .destination-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .destination-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 11. DESTINATIONS PAGE STYLES */
+.destinations-hero {
+    height: 50vh;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    padding: 0 20px;
+}
+
+.destinations-hero h1 {
+    font-size: 48px;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.destinations-hero p {
+    font-size: 20px;
+    opacity: 0.9;
+    color: #e0e0e0;
+}
+
+.state-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    margin-top: 50px;
+}
+
+.state-card {
+    aspect-ratio: 3 / 2;
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    color: white;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+}
+
+.state-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.3) 60%, transparent 100%);
+    transition: all 0.4s ease;
+}
+
+.state-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+.state-card:hover .state-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+.state-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 32px;
+    z-index: 2;
+}
+
+.state-info {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    z-index: 2;
+}
+
+.state-info h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: white;
+}
+
+.state-info p {
+    font-size: 16px;
+    opacity: 0.9;
+    color: #e0e0e0;
+}
+
+@media (max-width: 1200px) {
+    .state-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .destinations-hero h1 {
+        font-size: 36px;
+    }
+
+    .state-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+/* Reusing state-grid and state-card styles from destinations */
+
+/* Reusing state-grid and state-card styles from destinations */
+
+/* 13. ADVENTURE PAGE STYLES 
+   Thematic styles for the adventure activity discovery page.
+*/
+.adventure-hero {
+    /* Hero section with a blue-cyan gradient to represent water and air activities. */
+    height: 50vh;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    padding: 0 20px;
+}
+
+.adventure-hero h1 {
+    /* Large heading for the adventure page. */
+    font-size: 44px;
+    margin-bottom: 15px;
+}
+
+.adventure-hero p {
+}
+
+@keyframes slideUpChat {
+    from {
+        transform: translateY(20px) scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Chat Header */
+.chat-header {
+    background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header-info h4 {
+    margin: 0;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chat-header-info p {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.close-chat {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* Chat Messages */
+.chat-messages {
+    flex: 1;
+    background: #f8f9fa;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message {
+    max-width: 80%;
+    padding: 10px 15px;
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+    animation: fadeInMsg 0.3s ease;
+}
+
+@keyframes fadeInMsg {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.bot-message {
+    align-self: flex-start;
+    background: white;
+    color: #333;
+    border-radius: 18px 18px 18px 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.user-message {
+    align-self: flex-end;
+    background: #FF6B35;
+    color: white;
+    border-radius: 18px 18px 4px 18px;
+}
+
+.bot-avatar {
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #667eea;
+    font-weight: 600;
+}
+
+/* Quick Replies */
+.quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.quick-reply-btn {
+    background: white;
+    border: 1px solid #FF6B35;
+    color: #FF6B35;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quick-reply-btn:hover {
+    background: #FF6B35;
+    color: white;
+}
+
+/* Typing Indicator */
+.typing-indicator {
+    display: flex;
+    gap: 4px;
+    padding: 10px 15px;
+    background: white;
+    border-radius: 18px;
+    width: fit-content;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background: #ddd;
+    border-radius: 50%;
+    animation: dotBounce 1.4s infinite ease-in-out;
+}
+
+.dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes dotBounce {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+    }
+
+    40% {
+        transform: scale(1);
+    }
+}
+
+/* Chat Input */
+.chat-input-container {
+    padding: 15px;
+    background: white;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.chat-input {
+    flex: 1;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    border-radius: 25px;
+    outline: none;
+    font-size: 14px;
+}
+
+.chat-input:focus {
+    border-color: #FF6B35;
+}
+
+.send-btn {
+    width: 40px;
+    height: 40px;
+    background: #FF6B35;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.send-btn:hover {
+    background: #e55a2b;
+}
+
+.chatbot-window.active {
+    display: flex;
+    animation: slideUpChat 0.4s ease forwards;
+}
+
+.adventure-hero p {
+    font-size: 20px;
+    opacity: 0.9;
+}
+
+/* 14. HOMEPAGE HUB REFACTOR (THEME GRID) */
+.theme-section {
+    padding: 80px 0;
+    background: var(--dark-bg);
+}
+
+.theme-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.theme-card {
+    height: 300px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.theme-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    transition: background 0.3s ease;
+}
+
+.theme-card:hover::before {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.theme-card .theme-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+    z-index: 1;
+    filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+}
+
+.theme-card h3 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    z-index: 1;
+    font-family: 'Playfair Display', serif;
+    color: white;
+}
+
+.theme-card p {
+    font-size: 16px;
+    opacity: 0.95;
+    margin-bottom: 20px;
+    z-index: 1;
+}
+
+.theme-card .btn-theme {
+    padding: 10px 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.theme-card:hover {
+    transform: translateY(-8px);
+}
+
+.theme-card:hover .btn-theme {
+    background: white;
+    color: #1a1a2e;
+}
+
+/* Gradients & Glows */
+.theme-festivals {
+    background: linear-gradient(135deg, #0cc0ac 0%, #0a7c6e 100%);
+}
+
+.theme-festivals:hover {
+    box-shadow: 0 15px 40px rgba(12, 192, 172, 0.4);
+}
+
+.theme-destinations {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+
+.theme-destinations:hover {
+    box-shadow: 0 15px 40px rgba(30, 60, 114, 0.4);
+}
+
+.theme-adventure {
+    background: linear-gradient(135deg, #000428 0%, #004e92 100%);
+}
+
+.theme-adventure:hover {
+    box-shadow: 0 15px 40px rgba(0, 78, 146, 0.4);
+}
+
+/* === THEME MODALS === */
+.theme-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    backdrop-filter: blur(8px);
+}
+
+.theme-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.theme-modal-panel {
+    background: var(--card-bg);
+    width: 90%;
+    max-width: 500px;
+    border-radius: 16px;
+    position: relative;
+    padding: 40px;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+    box-shadow: 0 15px 60px rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--border-color);
+}
+
+.theme-modal-overlay.active .theme-modal-panel {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.theme-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.2s;
+    line-height: 1;
+}
+
+.theme-modal-close:hover {
+    color: white;
+}
+
+.theme-modal-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.theme-modal-content p {
+    font-size: 16px;
+    color: var(--text-color);
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.theme-highlights {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    border: 1px solid var(--border-color);
+}
+
+.theme-highlights h4 {
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: var(--primary-color);
+}
+
+.theme-highlights li {
+    padding-left: 20px;
+    position: relative;
+    margin-bottom: 8px;
+    font-size: 15px;
+    color: var(--text-muted);
+}
+
+.theme-highlights li::before {
+    content: '•';
+    color: var(--primary-color);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+/* 15. CHATBOT STYLES */
+.chatbot-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 2000;
+    font-family: 'Outfit', sans-serif;
+}
+
+.chatbot-trigger {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #0cc0ac 0%, #0a7c6e 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(12, 192, 172, 0.4);
+    transition: all 0.3s ease;
+    animation: pulseChat 2s infinite;
+}
+
+@keyframes pulseChat {
+    0% { transform: scale(1); box-shadow: 0 4px 20px rgba(12, 192, 172, 0.4); }
+    50% { transform: scale(1.05); box-shadow: 0 4px 30px rgba(12, 192, 172, 0.6); }
+    100% { transform: scale(1); box-shadow: 0 4px 20px rgba(12, 192, 172, 0.4); }
+}
+
+.chatbot-window {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 400px;
+    height: 600px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 2001;
+    border: 1px solid var(--border-color);
+    transform-origin: bottom right;
+}
+
+.chat-header {
+    background: linear-gradient(135deg, #0cc0ac 0%, #0a7c6e 100%);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header-info h4 {
+    margin: 0;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chat-header-info p {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.close-chat {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* Chat Messages */
+.chat-messages {
+    flex: 1;
+    background: var(--dark-bg);
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message {
+    max-width: 80%;
+    padding: 10px 15px;
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+    animation: fadeInMsg 0.3s ease;
+}
+
+@keyframes fadeInMsg {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.bot-message {
+    align-self: flex-start;
+    background: var(--card-bg);
+    color: var(--text-color);
+    border-radius: 18px 18px 18px 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+}
+
+.user-message {
+    align-self: flex-end;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 18px 18px 4px 18px;
+}
+
+.bot-avatar {
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #667eea;
+    font-weight: 600;
+}
+
+//* 15. CHATBOT STYLES REFINEMENT */
+.quick-reply-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quick-reply-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.typing-indicator {
+    display: flex;
+    gap: 4px;
+    padding: 10px 15px;
+    background: var(--card-bg);
+    border-radius: 18px;
+    width: fit-content;
+    border: 1px solid var(--border-color);
+}
+
+.chat-input-container {
+    padding: 15px;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.chat-input {
+    flex: 1;
+    border: 1px solid var(--border-color);
+    padding: 10px 15px;
+    border-radius: 25px;
+    outline: none;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-color);
+}
+
+.chat-input:focus {
+    border-color: var(--primary-color);
+}
+
+.send-btn {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.send-btn:hover {
+    background: #09a191;
+}
+
+/* 16. PREMIUM STATE SPOTS MODAL */
+.state-spots-panel {
+    background: var(--card-bg) !important;
+    max-width: 1000px;
+    width: 90%;
+    max-height: 90vh;
+    border-radius: 24px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    position: relative;
+    animation: modalFadeIn 0.5s ease;
+}
+
+.state-spots-header h2 {
+    font-size: 48px;
+    color: white;
+    margin: 0;
+    letter-spacing: -1px;
+    font-family: 'Playfair Display', serif;
+}
+
+.state-spots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+    overflow-y: auto;
+    padding-right: 10px;
+    flex: 1;
+}
+
+.state-spots-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.state-spots-grid::-webkit-scrollbar-track { 
+    background: var(--dark-bg); 
+    border-radius: 10px; 
+}
+
+.state-spots-grid::-webkit-scrollbar-thumb { 
+    background: var(--primary-color); 
+    border-radius: 10px; 
+}
+
+
+.spot-item {
+    background: transparent;
+    border-radius: 16px;
+    transition: transform 0.3s ease;
+}
+
+.spot-image-container {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+}
+
+.spot-info h4 {
+    font-size: 24px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 10px 0;
+}
+
+.spot-info p {
+    font-size: 16px;
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0 0 15px 0;
+}
+
+.spot-time {
+    display: inline-block;
+    font-size: 14px;
+    color: var(--primary-color);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 0;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.state-spots-footer {
+    padding-top: 30px;
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid var(--border-color);
+}
+
+.centered-btn {
+    padding: 20px 50px;
+    font-size: 20px;
+    border-radius: 100px;
+    background: var(--primary-gradient);
+    border: none;
+    color: white;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(12, 192, 172, 0.3);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.centered-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(12, 192, 172, 0.5);
+}
+
+/* 17. STATE LANDING PAGES */
+.state-hero {
+    height: 60vh;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    position: relative;
+    margin-top: 50px;
+    background: var(--primary-gradient);
+}
+
+.state-hero .playfair {
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    font-weight: 700;
+    color: white;
+}
+
+.state-hero p {
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
+    max-width: 800px;
+    margin: 0 auto;
+    font-weight: 300;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    color: #e0e0e0;
+}
+
+.spots-section {
+    background: var(--dark-bg);
+}
+
+.spot-card {
+    background: var(--card-bg);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 15px 45px rgba(0,0,0,0.3);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+}
+
+.spot-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 25px 60px rgba(12, 192, 172, 0.2);
+    border-color: var(--primary-color);
+}
+
+.spot-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.spot-content p {
+    color: var(--text-color);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    font-size: 1.05rem;
+}
+
+.spot-meta {
+    margin-top: auto;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+    color: var(--primary-color);
+}
+
+.spot-meta span strong {
+    color: white;
+    margin-right: 5px;
+}
+
+.cta-section {
+    background: var(--card-bg);
+}
+
+/* 18. NAVIGATION BUTTONS (STATE PAGES) */
+.nav-back-to-home {
+    position: sticky;
+    top: 90px;
+    left: 20px;
+    z-index: 900;
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 25px;
+    margin: 15px 40px;
+    background: var(--card-bg);
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid var(--border-color);
+}
+
+.nav-back-to-home:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateX(-5px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(12, 192, 172, 0.4);
+    border-color: var(--primary-color);
+}
+
+.nav-bottom-container {
+    padding: 40px 0;
+    border-top: 1px solid var(--border-color);
+    margin-top: 20px;
+}
+
+.nav-page-back {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 35px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+}
+
+.nav-page-back:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateX(-8px);
+    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+}
+
+/* ===== QUICK VISIBILITY FIXES ===== */
+#main-header {
+    background: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(10px);
+}
+
+#main-header.scrolled {
+    background: var(--glass-bg) !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.logo {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.nav-links a {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+#main-header.scrolled .logo,
+#main-header.scrolled .nav-links a {
+    text-shadow: none;
+}
+
+/* Final cleanup for residual light backgrounds */
+#main-header.scrolled .navbar {
+    background: transparent !important;
+}
+
+.fade-in-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .nav-back-to-home {
+        font-size: 0.95rem;
+        padding: 8px 18px;
+    }
+}

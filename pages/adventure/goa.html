@@ -1,0 +1,137 @@
+<!-- 
+    Document Type Declaration: Targets modern browsers for standard rendering.
+-->
+<!DOCTYPE html>
+<!-- 
+    Root Element: Language set to English.
+-->
+<html lang="en">
+<!-- 
+    Head Section: Metadata and assets for the Goa adventure page.
+-->
+<head>
+    <!-- Character Encoding. -->
+    <meta charset="UTF-8">
+    <!-- Viewport for mobile responsiveness. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Browser Tab Title. -->
+    <title>Goa | Adventure India</title>
+    <!-- Core global styles. -->
+    <link rel="stylesheet" href="../../css/style.css">
+    <!-- Specialized styles for state-specific layouts. -->
+    <link rel="stylesheet" href="../../css/state-pages.css">
+    <!-- Google Fonts import. -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 
+        Main Site Header:
+        Contains logo and top-level navigation.
+    -->
+    <header id="main-header">
+        <nav class="navbar">
+            <!-- Logo Section: Navigates back to the root landing page. -->
+            <a href="../../index.html" class="logo">
+                <img src="../../images/logo.png" alt="Travel Planner">
+            </a>
+            <!-- Navigation link list. -->
+            <ul class="nav-links">
+                <li><a href="../../festivals.html">Festivals</a></li>
+                <li><a href="../../destinations.html">Destinations</a></li>
+                <li><a href="../../adventure.html">Adventure</a></li>
+            </ul>
+            <!-- Primary Action: Leads to trip planning/login. -->
+            <a href="../../index.html" class="btn-primary" id="join-waitlist-btn">🤖 Plan a Trip</a>
+        </nav>
+    </header>
+
+    <!-- 
+        Navigation Control: 
+        Allows the user to return to the previous view (usually Adventure Grid).
+    -->
+    <button onclick="history.back()" class="state-page-back-btn">
+        ← Back
+    </button>
+
+    <!-- 
+        Main Content Area:
+        Specific details for Goa's adventure activities.
+    -->
+    <main>
+        <!-- Hero Section: High-impact banner with state name. -->
+        <section class="state-hero" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../../images/adventure/goa.jpg') center/cover no-repeat;">
+            <div class="container">
+                <!-- State Title: Uses Playfair font for branding. -->
+                <h1 class="playfair">Goa</h1>
+                <!-- Short descriptive tagline. -->
+                <p>Underwater wonders and beach thrills.</p>
+            </div>
+        </section>
+
+        <!-- Activities Section: Lists individual adventure spots/categories. -->
+        <section class="spots-section section-padding">
+            <div class="container">
+                <!-- Section Title. -->
+                <h2 class="section-title text-center">Top Adventure Activities</h2>
+                <!-- Decorative underline. -->
+                <div class="section-accent"></div>
+                <!-- Grid: Layout for activity cards. -->
+                <div class="spots-grid">
+
+                    <!-- Spot 1: Water Sports -->
+                    <div class="spot-card">
+                        <!-- Activity Thumbnail. -->
+                        <div class="spot-img">
+                            <img src="../../images/adventure/spots/goa-watersports.jpg" alt="Water Sports">
+                        </div>
+                        <!-- Activity Description. -->
+                        <div class="spot-content">
+                            <h3>Water Sports</h3>
+                            <p>Parasailing, jet skiing, and banana boat rides</p>
+                            <!-- Metadata: Best time and difficulty level. -->
+                            <div class="spot-meta">
+                                <span class="badge badge-time">Nov–Feb</span>
+                                <span class="badge badge-easy">Difficulty: Easy</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Spot 2: Scuba Diving -->
+                    <div class="spot-card">
+                        <div class="spot-img">
+                            <img src="../../images/adventure/spots/goa-scuba.jpg" alt="Scuba Diving">
+                        </div>
+                        <div class="spot-content">
+                            <h3>Scuba Diving</h3>
+                            <p>Explore underwater coral reefs and shipwrecks</p>
+                            <div class="spot-meta">
+                                <span class="badge badge-time">Nov–Feb</span>
+                                <span class="badge badge-moderate">Difficulty: Moderate</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Call-to-Action: Persistent booking trigger. -->
+        <section class="cta-section section-padding">
+            <div class="container text-center">
+                <a href="../../login.html" class="btn-primary btn-large">Plan a Trip 🤖</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Basic Footer. -->
+    <footer class="footer">
+        <div class="container text-center">
+            <!-- Copyright Notice. -->
+            <p>&copy; 2026 Travel Planner India. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Script: Handles session logic and potential login state checks. -->
+    <script src="../../session-helper.js"></script>
+</body>
+</html>

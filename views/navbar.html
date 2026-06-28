@@ -1,0 +1,28 @@
+<!-- Navbar Component: The reusable navigation bar used across multiple pages of the site. -->
+<nav class="navbar">
+    <!-- <nav> specifies the primary navigation block. '.navbar' class handles alignment (flex) and height. -->
+    <a href="index.html" class="logo">
+        <!-- <a> wraps the logo image, serving as a 'Home' button for users. -->
+        <img src="images/logo.png" alt="Travel Planner">
+        <!-- <img> displays the project logo. 'alt' is used for screen readers to describe the link purpose. -->
+    </a>
+    <div class="hamburger" id="hamburger">
+        <!-- <div> used as a clickable toggle for the mobile menu. 'id' is targeted by app.js. -->
+        <span class="bar"></span>
+        <!-- <span> elements represent the three visual lines of the hamburger menu. -->
+        <span class="bar"></span>
+        <!-- They are styled in CSS to create the icon shape without external image dependencies. -->
+        <span class="bar"></span>
+    </div>
+    <ul class="nav-links">
+        <!-- <ul> groups the main page links into a list for better accessibility. -->
+        <li><a href="festivals.html">Festivals</a></li>
+        <!-- <li>/<a> link to the Festivals discovery page. -->
+        <li><a href="destinations.html">Destinations</a></li>
+        <!-- link to the Destinations state-wise grid. -->
+        <li><a href="adventure.html">Adventure</a></li>
+        <!-- link to the Adventure Hub. -->
+    </ul>
+    <button class="btn-primary" id="join-waitlist-btn">Join Waitlist</button>
+    <!-- <button> Call-to-action for the waitlist feature. '.btn-primary' provides the brand-colored styling. -->
+</nav>

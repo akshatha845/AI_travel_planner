@@ -1,0 +1,573 @@
+<!-- 
+    Document Type Declaration: Tells the browser this is an HTML5 document.
+-->
+<!DOCTYPE html>
+<!-- 
+    Root Element: Contains all HTML content. The 'lang' attribute specifies English as the primary language.
+-->
+<html lang="en">
+
+<!-- 
+    Head Section: Contains metadata, title, and links to external resources (CSS, Fonts). 
+-->
+
+<head>
+    <!-- Character Encoding: Sets character set to UTF-8 for international text support. -->
+    <meta charset="UTF-8">
+    <!-- Viewport Settings: Ensures the website is responsive and fits properly on mobile devices. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Page Title: Displayed in the browser tab. -->
+    <title>India Festivals | Travel Planner</title>
+    <!-- Main Stylesheet: Links the core CSS file for styling the components. -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts: Imports 'Outfit' for modern interface text and 'Playfair Display' for elegant headings. -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<!-- 
+    Body Content: Contains all visible elements of the page.
+-->
+
+<body>
+
+    <!-- 
+        Main Site Header: Fixed navigation bar that stays atop the page.
+        ID 'main-header' is used for scroll-based transparency effects in app.js.
+    -->
+    <header id="main-header">
+        <!-- Flexbox Navigation Container: Organizes logo, links, and CTA button. -->
+        <nav class="navbar">
+            <!-- Home Logo: Links back to the landing page. -->
+            <a href="index.html" class="logo">
+                <!-- Logo Image: Scaled for both desktop and mobile views. -->
+                <img src="images/logo.png" alt="Travel Planner Logo" class="logo-img">
+            </a>
+            <!-- 
+                Mobile Hamburger Menu: Visible only on small screens. 
+                Triggered by app.js to reveal 'nav-links'.
+            -->
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <!-- Navigation Links List: Sidebar style on mobile, horizontal row on desktop. -->
+            <ul class="nav-links">
+                <!-- Link to Festivals page (Current Page). -->
+                <li><a href="festivals.html">Festivals</a></li>
+                <!-- Link to Destinations page. -->
+                <li><a href="destinations.html">Destinations</a></li>
+                <!-- Link to Adventure page. -->
+                <li><a href="adventure.html">Adventure</a></li>
+                <li id="logout-nav-item" style="display: none;"><a href="#" id="logout-link">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Area: Holds all sections specific to the festivals landing page. -->
+    <main>
+        <!-- 
+            Festivals Hero Section: A large, high-impact banner at the top. 
+            Background image is set via CSS class '.festivals-hero'.
+        -->
+        <section class="festivals-hero">
+            <!-- Content Container: Centers content and provides consistent margins. -->
+            <div class="container fade-in-section">
+                <!-- Large Page Heading: Clearly defines the page's purpose. -->
+                <h1>Experience India's Vibrant Festivals</h1>
+                <!-- Compelling Subtitle: Encourages exploration. -->
+                <p>Immerse yourself in colors, traditions, and celebrations</p>
+            </div>
+        </section>
+
+        <!-- 
+            Festival Grid Section: Displays interactive cards for major Indian festivals. 
+        -->
+        <section id="festival-cards" class="festivals-section section-padding">
+            <!-- Container for centering and spacing. -->
+            <div class="container">
+                <!-- Section Title: Uses 'fade-in-section' for scroll-triggered animation. -->
+                <h2 class="section-title fade-in-section">Experience India's Vibrant Festivals</h2>
+                <!-- Informative Subtitle below the heading. -->
+                <p class="subtitle text-center fade-in-section">
+                    Immerse yourself in colors, traditions, and celebrations that make India truly incredible</p>
+
+                <!-- Grid Component: Uses CSS Grid to organize cards into a flexible layout. -->
+                <div class="festival-grid">
+                    <!-- 
+                        Diwali Festival Card: 
+                        ID classes (like item-diwali) apply specific background images in style.css.
+                    -->
+                    <div class="festival-card item-diwali fade-in-section">
+                        <!-- Card Photo Area: Displayed at the top of the card. -->
+                        <div class="festival-card-img"></div>
+                        <!-- Informational Badge: Shows the typical month/season. -->
+                        <span class="season-badge">October - November</span>
+                        <!-- Custom CTA Button: Appears on hover. -->
+                        <div class="explore-festival-btn">Explore Festival</div>
+                        <!-- Card Body Text: High-contrast text on top of the image or gradient. -->
+                        <div class="festival-card-content">
+                            <!-- Main Name. -->
+                            <h3>Diwali</h3>
+                            <!-- Short catchy title. -->
+                            <span class="festival-subtitle">Festival of Lights</span>
+                            <!-- One-line description. -->
+                            <p class="festival-desc">The triumph of light over darkness</p>
+                        </div>
+                    </div>
+
+                    <!-- Holi Festival Card: Same structure as Diwali. -->
+                    <div class="festival-card item-holi fade-in-section">
+                        <!-- Image Container. -->
+                        <div class="festival-card-img"></div>
+                        <!-- Month Badge. -->
+                        <span class="season-badge">March</span>
+                        <!-- Hover trigger button. -->
+                        <div class="explore-festival-btn">Explore Festival</div>
+                        <!-- Text Overlay. -->
+                        <div class="festival-card-content">
+                            <h3>Holi</h3>
+                            <span class="festival-subtitle">Festival of Colors</span>
+                            <p class="festival-desc">Celebrate spring with vibrant colors</p>
+                        </div>
+                    </div>
+
+                    <!-- Durga Puja Festival Card. -->
+                    <div class="festival-card item-durga-puja fade-in-section">
+                        <!-- Image Container. -->
+                        <div class="festival-card-img"></div>
+                        <!-- Month Badge. -->
+                        <span class="season-badge">September - October</span>
+                        <!-- Hover trigger button. -->
+                        <div class="explore-festival-btn">Explore Festival</div>
+                        <!-- Text Overlay. -->
+                        <div class="festival-card-content">
+                            <h3>Durga Puja</h3>
+                            <span class="festival-subtitle">Grand Eastern Celebration</span>
+                            <p class="festival-desc">Artistic pandals and devotion</p>
+                        </div>
+                    </div>
+
+                    <!-- Pushkar Fair Festival Card. -->
+                    <div class="festival-card item-pushkar fade-in-section">
+                        <!-- Image Container. -->
+                        <div class="festival-card-img"></div>
+                        <!-- Month Badge. -->
+                        <span class="season-badge">November</span>
+                        <!-- Hover trigger button. -->
+                        <div class="explore-festival-btn">Explore Festival</div>
+                        <!-- Text Overlay. -->
+                        <div class="festival-card-content">
+                            <h3>Pushkar Fair</h3>
+                            <span class="festival-subtitle">Desert Festival</span>
+                            <p class="festival-desc">World's largest camel fair in Rajasthan</p>
+                        </div>
+                    </div>
+
+                    <!-- Onam Festival Card. -->
+                    <div class="festival-card item-onam fade-in-section">
+                        <!-- Image Container. -->
+                        <div class="festival-card-img"></div>
+                        <!-- Month Badge. -->
+                        <span class="season-badge">August - September</span>
+                        <!-- Hover trigger button. -->
+                        <div class="explore-festival-btn ">Explore Festival</div>
+                        <!-- Text Overlay. -->
+                        <div class="festival-card-content">
+                            <h3>Onam</h3>
+                            <span class="festival-subtitle">Kerala's Harvest Festival</span>
+                            <p class="festival-desc">Flower carpets and boat races</p>
+                        </div>
+                    </div>
+
+                    <!-- Ganesh Chaturthi Festival Card. -->
+                    <div class="festival-card item-ganesh fade-in-section">
+                        <!-- Image Container. -->
+                        <div class="festival-card-img"></div>
+                        <!-- Month Badge. -->
+                        <span class="season-badge">August - September</span>
+                        <!-- Hover trigger button. -->
+                        <div class="explore-festival-btn ">Explore Festival</div>
+                        <!-- Text Overlay. -->
+                        <div class="festival-card-content">
+                            <h3>Ganesh Chaturthi</h3>
+                            <span class="festival-subtitle">Mumbai's Grandest Festival</span>
+                            <p class="festival-desc">Colorful processions and celebrations</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+            Travel Guides Section: Detailed articles about festival tourism. 
+        -->
+        <section id="travel-guides" class="guides-section section-padding">
+            <!-- Consistent layout container. -->
+            <div class="container">
+                <!-- Section Header. -->
+                <h2 class="section-title fade-in-section">Festival Travel Guides</h2>
+                <!-- Centered subtitle with manual margin adjustments for visual spacing. -->
+                <p class="subtitle fade-in-section" style="text-align: center; margin-top: -20px; margin-bottom: 50px;">
+                    Discover authentic festival experiences across India</p>
+
+                <!-- Grid for long-form guide cards. -->
+                <div class="guides-grid">
+                    <!-- Guide Card 1: Varanasi Diwali. -->
+                    <article class="guide-card fade-in-section">
+                        <!-- Background Image: Inline set unique for each guide card. -->
+                        <div class="guide-image" style="background-image: url('images/guides/varanasi-diwali.jpg');">
+                            <!-- Category label (e.g., 'Festival Guide'). -->
+                            <span class="guide-category">Festival Guide</span>
+                        </div>
+                        <!-- Textual content area. -->
+                        <div class="guide-content">
+                            <!-- Article Heading. -->
+                            <h3>Diwali in Varanasi: A Spiritual Journey</h3>
+                            <!-- Short summary blurb. -->
+                            <p>Experience the spiritual side of Diwali on the ghats of Varanasi with thousands of lamps
+                                illuminating the sacred river.</p>
+                            <!-- Footer of the guide card containing meta info. -->
+                            <div class="guide-footer">
+                                <!-- Suggested trip duration. -->
+                                <span class="duration-badge">⏱ 3-4 days</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Guide Card 2: Holi in Mathura. -->
+                    <article class="guide-card fade-in-section">
+                        <!-- Image Area. -->
+                        <div class="guide-image" style="background-image: url('images/guides/holi-mathura.jpg');">
+                            <span class="guide-category">Festival Guide</span>
+                        </div>
+                        <!-- Content Area. -->
+                        <div class="guide-content">
+                            <h3>Holi in Mathura & Vrindavan: Where It All Began</h3>
+                            <p>Celebrate Holi at its birthplace with traditional temple festivities and vibrant color
+                                celebrations.</p>
+                            <div class="guide-footer">
+                                <span class="duration-badge">⏱ 2-3 days</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Guide Card 3: Durga Puja Kolkata. -->
+                    <article class="guide-card fade-in-section">
+                        <!-- Image Area. -->
+                        <div class="guide-image" style="background-image: url('images/guides/durga-puja.jpg');">
+                            <span class="guide-category">Festival Guide</span>
+                        </div>
+                        <!-- Content Area. -->
+                        <div class="guide-content">
+                            <h3>Durga Puja in Kolkata: India's Grandest Festival</h3>
+                            <p>Explore thousands of artistic pandals across Kolkata and experience Bengal's biggest
+                                celebration.</p>
+                            <div class="guide-footer">
+                                <span class="duration-badge">⏱ 4-5 days</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Guide Card 4: Pushkar Fair. -->
+                    <article class="guide-card fade-in-section">
+                        <!-- Image Area. -->
+                        <div class="guide-image" style="background-image: url('images/guides/pushkar-fair.jpg');">
+                            <span class="guide-category">Festival Guide</span>
+                        </div>
+                        <!-- Content Area. -->
+                        <div class="guide-content">
+                            <h3>Pushkar Fair: Desert Festival Under the Stars</h3>
+                            <p>Witness ancient traditions at the world's largest camel fair in the Rajasthan desert.</p>
+                            <div class="guide-footer">
+                                <span class="duration-badge">⏱ 2-3 days</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+            Seasonal breakdown Section: Organizes festivals by time of year. 
+        -->
+        <section id="seasonal-festivals" class="festival-seasons section-padding">
+            <!-- Consistent layout container. -->
+            <div class="container">
+                <!-- Grouped Title for temporal organization. -->
+                <h2 class="section-title fade-in-section">When to Experience India's Festivals</h2>
+                <!-- Subtext. -->
+                <p class="subtitle fade-in-section" style="text-align: center; margin-top: -20px; margin-bottom: 50px;">
+                    Plan your visit based on the season</p>
+
+                <!-- Grid for Seasonal cards. -->
+                <div class="festival-seasons-grid">
+                    <!-- Winter Season Card: Cold months favorites. -->
+                    <div class="season-festival-card winter-card fade-in-section">
+                        <!-- Decorative Season Emoji. -->
+                        <div class="season-emoji">🪔</div>
+                        <!-- Card Title. -->
+                        <h3>Winter Festivals</h3>
+                        <!-- Range of months. -->
+                        <span class="season-range">October - February</span>
+                        <!-- Bulleted list of highlights. -->
+                        <p class="festivals-list">Diwali • Pushkar Fair • Christmas • Lohri</p>
+                        <!-- Summary paragraph. -->
+                        <p class="season-desc">The best time for festival celebrations with perfect weather across India
+                        </p>
+                    </div>
+
+                    <!-- Spring & Summer Season Card. -->
+                    <div class="season-festival-card summer-card fade-in-section">
+                        <!-- Decorative Season Emoji. -->
+                        <div class="season-emoji">🎨</div>
+                        <!-- Card Title. -->
+                        <h3>Spring & Summer</h3>
+                        <!-- Range of months. -->
+                        <span class="season-range">March - June</span>
+                        <!-- Bulleted list of highlights. -->
+                        <p class="festivals-list">Holi • Baisakhi • Rath Yatra</p>
+                        <!-- Summary paragraph. -->
+                        <p class="season-desc">Vibrant color festivals and summer celebrations in cooler hill stations
+                        </p>
+                    </div>
+
+                    <!-- Monsoon Season Card. -->
+                    <div class="season-festival-card monsoon-card fade-in-section">
+                        <!-- Decorative Season Emoji. -->
+                        <div class="season-emoji">🌧️</div>
+                        <!-- Card Title. -->
+                        <h3>Monsoon Festivals</h3>
+                        <!-- Range of months. -->
+                        <span class="season-range">July - September</span>
+                        <!-- Bulleted list of highlights. -->
+                        <p class="festivals-list">Onam • Ganesh Chaturthi • Durga Puja</p>
+                        <!-- Summary paragraph. -->
+                        <p class="season-desc">Lush green landscapes and regional harvest festivals across the country
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- 
+            Tour Features Highlights: Why book a curated tour? 
+        -->
+        <section id="tour-features" class="festival-special section-padding">
+            <!-- Consistent layout container. -->
+            <div class="container">
+                <!-- Section Title for Value Props. -->
+                <h2 class="section-title fade-in-section">What Makes Our Festival Tours Special</h2>
+                <!-- Subheading. -->
+                <p class="subtitle fade-in-section" style="text-align: center; margin-top: -20px; margin-bottom: 50px;">
+                    Experience India's festivals with expert guidance and authentic connections</p>
+
+                <!-- Grid for Value Proposition Boxes. -->
+                <div class="special-features-grid">
+                    <!-- Feature 1: Local Knowledge. -->
+                    <div class="feature-box fade-in-section">
+                        <!-- Icon. -->
+                        <span class="feature-emoji">👨‍🏫</span>
+                        <!-- Value point title. -->
+                        <h3>Expert Local Guides</h3>
+                        <!-- Descriptive text. -->
+                        <p>Native guides who understand the cultural significance and hidden stories behind each
+                            celebration</p>
+                    </div>
+
+                    <!-- Feature 2: Photography. -->
+                    <div class="feature-box fade-in-section">
+                        <span class="feature-emoji">📸</span>
+                        <h3>Best Photo Spots</h3>
+                        <p>Access to the best locations and timing for capturing stunning festival moments</p>
+                    </div>
+
+                    <!-- Feature 3: Stays. -->
+                    <div class="feature-box fade-in-section">
+                        <span class="feature-emoji">🏨</span>
+                        <h3>Curated Accommodations</h3>
+                        <p>Handpicked stays near festival venues that offer authentic local experiences</p>
+                    </div>
+
+                    <!-- Feature 4: Access. -->
+                    <div class="feature-box fade-in-section">
+                        <span class="feature-emoji">🎟️</span>
+                        <h3>VIP Access</h3>
+                        <p>Skip long lines and enjoy priority entry to main events and best viewing spots</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 
+        Site Footer: Multi-column area with navigation and social links. 
+    -->
+    <footer>
+        <!-- Centered Container. -->
+        <div class="container">
+            <!-- Footer Content Flexbox Wrapper. -->
+            <div class="footer-content">
+                <!-- Branding area. -->
+                <div class="footer-logo">Travel Planner India</div>
+
+                <!-- Column 1: Shortcuts. -->
+                <div class="footer-section">
+                    <!-- Short Heading. -->
+                    <h4>Quick Links</h4>
+                    <!-- Link list. -->
+                    <ul class="footer-links">
+                        <!-- Festivals Link. -->
+                        <li><a href="festivals.html">Festivals</a></li>
+                        <!-- Anchor Link to Destinations on homepage. -->
+                        <li><a href="index.html#destinations">Destinations</a></li>
+                        <!-- Anchor Link to Activities on homepage. -->
+                        <li><a href="index.html#activities">Activities</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 2: Reach Out. -->
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <!-- Official contact email. -->
+                    <p class="contact-email">hello@travelplanner.in</p>
+                    <!-- Row of Social Presence Emojis. -->
+                    <div class="social-links">
+                        <!-- Instagram. -->
+                        <span>📸</span>
+                        <!-- Twitter/X. -->
+                        <span>🐦</span>
+                        <!-- Facebook. -->
+                        <span>📘</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Legal Line: Centered copyright information. -->
+            <div class="copyright">
+                &copy; 2026 Travel Planner India. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- 
+        Mobile Navigation Backdrop: Darkens the page when the mobile menu is open. 
+    -->
+    <div id="nav-overlay" class="nav-overlay"></div>
+
+    <!-- 
+        Back to Top Utility: Small button to quickly scroll upward. 
+    -->
+    <button id="back-to-top" class="back-to-top" aria-label="Back to Top">
+        <!-- Upward Arrow Symbol. -->
+        <span class="arrow">⬆️</span>
+    </button>
+
+    <!-- 
+        AI Chatbot Interface: Persistent floating assistant widget. 
+    -->
+    <div class="chatbot-container">
+        <!-- Round launcher button. -->
+        <div class="chatbot-trigger" id="chatbot-trigger">
+            <!-- Bot head icon. -->
+            <span>🤖</span>
+        </div>
+
+        <!-- Chat Window: Hidden initially, shown via JavaScript. -->
+        <div class="chatbot-window" id="chatbot-window">
+            <!-- Header area for branding the chat experience. -->
+            <div class="chat-header">
+                <!-- Information grouping. -->
+                <div class="chat-header-info">
+                    <!-- Widget title. -->
+                    <h4>🇮🇳 India Travel Assistant</h4>
+                    <!-- Tagline. -->
+                    <p>Powered by AI</p>
+                </div>
+                <!-- Mini Close button. -->
+                <button class="close-chat" id="close-chat">&times;</button>
+            </div>
+            <!-- Dynamic message history container. -->
+            <div class="chat-messages" id="chat-messages">
+                <!-- Messages will be injected here via JavaScript 'app.js'. -->
+            </div>
+            <!-- Interaction form at the bottom. -->
+            <form class="chat-input-container" id="chat-form">
+                <!-- Text input field. -->
+                <input type="text" class="chat-input" id="chat-input" placeholder="Ask me anything about India..."
+                    autocomplete="off">
+                <!-- Submission button. -->
+                <button type="submit" class="send-btn">➤</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- 
+        Interactive Place Detail Modal: Displays specifics when a destination or festival is explored. 
+        Populated dynamically by app.js based on data-destinations.js.
+    -->
+    <div class="theme-modal-overlay" id="dynamic-place-modal">
+        <!-- Content Panel. -->
+        <div class="theme-modal-panel">
+            <!-- Corner Close Button. -->
+            <button class="theme-modal-close" id="dynamic-place-modal-close">&times;</button>
+            <!-- Content grouping. -->
+            <div class="theme-modal-content">
+                <!-- Dynamically injected title. -->
+                <h3 id="dynamic-place-title">Place Name</h3>
+                <!-- Dynamically injected description. -->
+                <p id="dynamic-place-desc">Description goes here...</p>
+                <!-- Detail Box. -->
+                <div class="theme-highlights">
+                    <!-- Heading for specific facts. -->
+                    <h4>Trip Information</h4>
+                    <!-- List of attributes. -->
+                    <ul>
+                        <!-- Landmark or cultural points. -->
+                        <li><strong>Highlights:</strong> <span id="dynamic-place-highlights">Rich cultural heritage,
+                                monuments, and local activities.</span></li>
+                        <!-- Season advice. -->
+                        <li><strong>Best Time:</strong> <span id="dynamic-place-time">October to March is generally
+                                ideal.</span></li>
+                        <!-- Travel accessibility facts. -->
+                        <li><strong>How to Reach:</strong> <span id="dynamic-place-reach">Accessible via major domestic
+                                flights and train routes.</span></li>
+                    </ul>
+                </div>
+                <!-- Deep Interaction: Redirects to the AI assistant for custom plans. -->
+                <button class="btn-primary plan-trip-btn">Plan a Trip 🤖</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 
+        Core Logic Extension: Links the JavaScript file that handles all interactivity (Modals, Chat, Nav). 
+    -->
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDeZhonP2b5kAHOoduq_bqhc5_1Wdf4rTw",
+            authDomain: "incredible-india-3798e.firebaseapp.com",
+            projectId: "incredible-india-3798e",
+            storageBucket: "incredible-india-3798e.firebasestorage.app",
+            messagingSenderId: "951233278790",
+            appId: "1:951233278790:web:630a11883549dbeae0ab47"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        window.firebaseAuth = auth;
+        window.firebaseSignOut = signOut;
+    </script>
+    <script src="app.js"></script>
+</body>
+
+</html>

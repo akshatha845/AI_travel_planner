@@ -1,0 +1,39 @@
+<!-- Hero Component: The primary introductory section of the landing page designed to capture user interest. -->
+<section id="hero">
+    <!-- <section> defines a thematic block. 'id="hero"' allows for full-screen layout and video positioning in CSS. -->
+    <div class="video-container">
+        <!-- <div> wrapper specifically designed to clip and contain the background video without overflow. -->
+        <video autoplay loop muted playsinline poster="images/hero-fallback.jpg" id="hero-video">
+            <!-- <video> provides the dynamic background. 'autoplay/loop/muted' are set for a silent, continuous experience.
+                 'playsinline' ensures it plays inside the page on mobile instead of going full-screen. -->
+            <source src="images/hero-video.mp4" type="video/mp4">
+            <!-- <source> specifies the file format and path. -->
+            Your browser does not support the video tag.
+            <!-- Fallback text for browsers that cannot render HTML5 video. -->
+        </video>
+        <div class="overlay"></div>
+        <!-- <div> is an absolute-positioned dark layer that improves contrast for the text overlaying the video. -->
+    </div>
+
+    <div class="hero-content fade-in-section">
+        <!-- <div> container for centered typography and interactive elements. '.fade-in-section' enables the scroll animation. -->
+        <span class="badge">AI-Powered Travel</span>
+        <!-- <span> styled as a small 'badge' to highlight a key unique selling point (AI). -->
+        <h1>Discover Incredible India</h1>
+        <!-- <h1> is the main catchphrase/primary heading of the component. -->
+        <p>Experience the magic of India with personalized itineraries powered by AI. From the Himalayas to the
+            backwaters, plan your perfect journey.</p>
+        <!-- <p> provides a detailed explanation of the product's value proposition. -->
+
+        <form class="email-form" id="waitlist-form">
+            <!-- <form> handles the data collection for the waitlist. -->
+            <input type="email" placeholder="Enter your email address" required>
+            <!-- <input type="email"> ensures the user enters a valid email format. 'required' prevents empty submissions. -->
+            <button type="submit" class="btn-primary">Start Planning</button>
+            <!-- <button> of type 'submit' triggers the form action. -->
+        </form>
+
+        <p class="small-text">Join thousands of travelers exploring India</p>
+        <!-- <p> secondary text for social proof, styled smaller to not compete with the main CTA. -->
+    </div>
+</section>
