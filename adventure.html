@@ -551,25 +551,7 @@
         2. app.js: Main interactive logic and UI state management.
     -->
     <script src="data-destinations.js"></script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDeZhonP2b5kAHOoduq_bqhc5_1Wdf4rTw",
-            authDomain: "incredible-india-3798e.firebaseapp.com",
-            projectId: "incredible-india-3798e",
-            storageBucket: "incredible-india-3798e.firebasestorage.app",
-            messagingSenderId: "951233278790",
-            appId: "1:951233278790:web:630a11883549dbeae0ab47"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        window.firebaseAuth = auth;
-        window.firebaseSignOut = signOut;
-    </script>
+    <script src="session-helper.js"></script>
     <script src="app.js"></script>
 </body>
 

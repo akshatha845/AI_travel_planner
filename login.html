@@ -825,45 +825,7 @@
         </div>
     </footer>
 
-    <!-- Firebase SDKs (Authentication). Must load BEFORE our own script. -->
-    <script type="module">
-        // ── Firebase Setup ───────────────────────────────────────
-        // 1. Import the pieces we need from Firebase's hosted SDK.
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import {
-            getAuth,
-            createUserWithEmailAndPassword,
-            signInWithEmailAndPassword
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import {
-            getFirestore,
-            doc,
-            setDoc
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-        // 2. PASTE your firebaseConfig object from the Firebase console here:
-        const firebaseConfig = {
-            apiKey: "AIzaSyDeZhonP2b5kAHOoduq_bqhc5_1Wdf4rTw",
-            authDomain: "incredible-india-3798e.firebaseapp.com",
-            projectId: "incredible-india-3798e",
-            storageBucket: "incredible-india-3798e.firebasestorage.app",
-            messagingSenderId: "951233278790",
-            appId: "1:951233278790:web:630a11883549dbeae0ab47"
-        };
-
-        // 3. Initialize Firebase and grab the Auth + Firestore services.
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // 4. Make these available to the regular (non-module) script below.
-        window.firebaseAuth = auth;
-        window.firebaseCreateUser = createUserWithEmailAndPassword;
-        window.firebaseSignIn = signInWithEmailAndPassword;
-        window.firebaseDb = db;
-        window.firebaseDoc = doc;
-        window.firebaseSetDoc = setDoc;
-    </script>
+    <!-- API base path for auth endpoints. -->
 
     <!-- Logic: Interaction handlers and Validation. -->
     <script>
@@ -1088,12 +1050,25 @@
             const emailField = fields.loginEmail;
             touchedFields.add(emailField.id);
             if (!validateField(emailField)) return;
-            document.getElementById('forgot-msg').style.display = 'block';
+            const email = emailField.value.trim();
+            fetch('/api/auth/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('forgot-msg').textContent = '✅ ' + (data.message || 'Reset link sent!');
+                document.getElementById('forgot-msg').style.display = 'block';
+            })
+            .catch(() => {
+                document.getElementById('forgot-msg').textContent = '❌ Network error. Please try again.';
+                document.getElementById('forgot-msg').style.display = 'block';
+            });
         }
 
         forms.signup.addEventListener('submit', function(e) {
             e.preventDefault();
-            // Perform final validation check
             const allInputs = [fields.fullName, fields.signupEmail, fields.signupPassword, fields.confirmPassword, fields.signupPhone];
             let isValid = true;
             allInputs.forEach(input => {
@@ -1107,61 +1082,37 @@
             const password = fields.signupPassword.value;
             const name = fields.fullName.value.trim() || 'Traveler';
 
-            // ── Step 1: Create the login account in Firebase Auth ───
-            window.firebaseCreateUser(window.firebaseAuth, email, password)
-                .then((userCredential) => {
-                    // Success! Firebase Auth created the account.
-                    // userCredential.user.uid is this person's unique ID —
-                    // we use it to label their record in Firestore.
-                    const uid = userCredential.user.uid;
-
-                    // ── Step 2: Save all the OTHER details in Firestore ──
-                    const userProfile = {
-                        fullName: name,
-                        email: email,
-                        country: fields.signupCountry ? fields.signupCountry.value : '',
-                        phone: fields.signupPhone.value.trim(),
-                        ageGroup: fields.ageGroup ? fields.ageGroup.value : '',
-                        basedIn: fields.basedIn ? fields.basedIn.value.trim() : '',
-                        preferredDuration: fields.duration ? fields.duration.value : '',
-                        budget: fields.budget ? fields.budget.value : '',
-                        specialNeeds: fields.specialNeeds ? fields.specialNeeds.value.trim() : '',
-                        createdAt: new Date().toISOString()
-                    };
-
-                    // "users" is the collection name (like a folder), uid is this
-                    // person's unique document name (like a file) inside it.
-                    window.firebaseSetDoc(window.firebaseDoc(window.firebaseDb, 'users', uid), userProfile)
-                        .then(() => {
-                            localStorage.setItem('loggedIn', 'true');
-                            localStorage.setItem('userName', name);
-                            localStorage.setItem('userEmail', email);
-                            localStorage.setItem('justSignedUp', 'true');
-                            window.location.href = 'index.html';
-                        })
-                        .catch((firestoreError) => {
-                            // Account was created but profile save failed —
-                            // still let them in, since login itself worked.
-                            console.error('Could not save extra profile details:', firestoreError);
-                            localStorage.setItem('loggedIn', 'true');
-                            localStorage.setItem('userName', name);
-                            localStorage.setItem('userEmail', email);
-                            localStorage.setItem('justSignedUp', 'true');
-                            window.location.href = 'index.html';
-                        });
+            fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fullName: name,
+                    email: email,
+                    password: password,
+                    phone: fields.signupPhone.value.trim(),
+                    country: fields.signupCountry ? fields.signupCountry.value : '',
+                    ageGroup: fields.ageGroup ? fields.ageGroup.value : ''
                 })
-                .catch((error) => {
-                    // Show Firebase's error message in the email field's error span.
+            })
+            .then(res => res.json().then(data => ({ status: res.status, data: data })))
+            .then(({ status, data }) => {
+                if (status === 201) {
+                    localStorage.setItem('loggedIn', 'true');
+                    localStorage.setItem('userName', name);
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('justSignedUp', 'true');
+                    window.location.href = 'index.html';
+                } else {
                     const errorSpan = fields.signupEmail.closest('.form-group').querySelector('.field-error');
-                    if (error.code === 'auth/email-already-in-use') {
-                        errorSpan.textContent = '❌ This email is already registered. Try logging in instead.';
-                    } else if (error.code === 'auth/weak-password') {
-                        errorSpan.textContent = '❌ Password is too weak.';
-                    } else {
-                        errorSpan.textContent = '❌ ' + error.message;
-                    }
+                    errorSpan.textContent = '❌ ' + (data.error || 'Signup failed.');
                     fields.signupEmail.classList.add('invalid');
-                });
+                }
+            })
+            .catch(() => {
+                const errorSpan = fields.signupEmail.closest('.form-group').querySelector('.field-error');
+                errorSpan.textContent = '❌ Network error. Please try again.';
+                fields.signupEmail.classList.add('invalid');
+            });
         });
 
         forms.login.addEventListener('submit', function(e) {
@@ -1179,25 +1130,30 @@
             const password = fields.loginPassword.value;
             const name = fields.loginName.value.trim() || 'Traveler';
 
-            // ── Check credentials against Firebase ──────────────
-            window.firebaseSignIn(window.firebaseAuth, email, password)
-                .then((userCredential) => {
-                    // Correct email + password combo found in the database.
+            fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, password: password })
+            })
+            .then(res => res.json().then(data => ({ status: res.status, data: data })))
+            .then(({ status, data }) => {
+                if (status === 200) {
                     localStorage.setItem('loggedIn', 'true');
                     localStorage.setItem('userName', name);
                     localStorage.setItem('userEmail', email);
                     localStorage.setItem('justLoggedIn', 'true');
                     window.location.href = 'index.html';
-                })
-                .catch((error) => {
+                } else {
                     const errorSpan = fields.loginPassword.closest('.form-group').querySelector('.field-error');
-                    if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-                        errorSpan.textContent = '❌ Incorrect email or password.';
-                    } else {
-                        errorSpan.textContent = '❌ ' + error.message;
-                    }
+                    errorSpan.textContent = '❌ ' + (data.error || 'Incorrect email or password.');
                     fields.loginPassword.classList.add('invalid');
-                });
+                }
+            })
+            .catch(() => {
+                const errorSpan = fields.loginPassword.closest('.form-group').querySelector('.field-error');
+                errorSpan.textContent = '❌ Network error. Please try again.';
+                fields.loginPassword.classList.add('invalid');
+            });
         });
     </script>
 

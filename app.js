@@ -254,26 +254,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (logoutLink) {
         logoutLink.addEventListener('click', function (e) {
             e.preventDefault();
-
-            /* Sign out of Firebase Auth if it's available on this page (e.g. via login.html's
-               module script). If not available, we still clear localStorage as a fallback so
-               the user is logged out of this site's UI either way. */
-            if (window.firebaseAuth && window.firebaseSignOut) {
-                window.firebaseSignOut(window.firebaseAuth)
-                    .then(() => {
-                        localStorage.clear();
-                        window.location.href = 'index.html';
-                    })
-                    .catch((error) => {
-                        console.error('Sign out error:', error);
-                        /* Even if Firebase sign-out fails, clear local session so the UI updates. */
-                        localStorage.clear();
-                        window.location.href = 'index.html';
-                    });
-            } else {
-                localStorage.clear();
-                window.location.href = 'index.html';
-            }
+            localStorage.clear();
+            window.location.href = 'index.html';
         });
     }
 
