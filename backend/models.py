@@ -1,3 +1,4 @@
+import json
 import secrets
 from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
@@ -66,3 +67,74 @@ class ResetToken(db.Model):
         db.session.add(reset)
         db.session.commit()
         return token_str
+
+class Destination(db.Model):
+    __tablename__ = 'destinations'
+    id = db.Column(db.Integer, primary_key=True)
+    slug = db.Column(db.String(80), unique=True, nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    emoji = db.Column(db.String(16), default='')
+    tagline = db.Column(db.String(200), default='')
+    hero_image = db.Column(db.String(255), default='')
+    highlight = db.Column(db.String(200), default='')
+    spots = db.Column(db.Text, default='[]')
+
+    def to_dict(self, include_spots=False):
+        data = {
+            'slug': self.slug,
+            'name': self.name,
+            'emoji': self.emoji,
+            'highlight': self.highlight,
+            'heroImage': self.hero_image,
+        }
+        if include_spots:
+            data['tagline'] = self.tagline
+            data['spots'] = json.loads(self.spots or '[]')
+        return data
+
+class Adventure(db.Model):
+    __tablename__ = 'adventures'
+    id = db.Column(db.Integer, primary_key=True)
+    slug = db.Column(db.String(80), unique=True, nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    emoji = db.Column(db.String(16), default='')
+    tagline = db.Column(db.String(200), default='')
+    hero_image = db.Column(db.String(255), default='')
+    highlight = db.Column(db.String(200), default='')
+    spots = db.Column(db.Text, default='[]')
+
+    def to_dict(self, include_spots=False):
+        data = {
+            'slug': self.slug,
+            'name': self.name,
+            'emoji': self.emoji,
+            'highlight': self.highlight,
+            'heroImage': self.hero_image,
+        }
+        if include_spots:
+            data['tagline'] = self.tagline
+            data['spots'] = json.loads(self.spots or '[]')
+        return data
+
+class ChatThread(db.Model):
+    __tablename__ = 'chat_threads'
+    id = db.Column(db.String(36), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    title = db.Column(db.String(255), default='New Chat')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    messages = db.relationship('ChatMessage', backref='thread', lazy=True)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'createdAt': self.created_at.isoformat()
+        }
+
+class ChatMessage(db.Model):
+    __tablename__ = 'chat_messages'
+    id = db.Column(db.Integer, primary_key=True)
+    thread_id = db.Column(db.String(36), db.ForeignKey('chat_threads.id'), nullable=False)
+    sender = db.Column(db.String(10), nullable=False) # 'user' or 'bot'
+    text = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
