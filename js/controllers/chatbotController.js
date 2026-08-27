@@ -1,11 +1,10 @@
 /**
  * TRAVEL PLANNER INDIA - CHATBOT CONTROLLER
  * Handles the interactive AI assistance experience: open/close/toggle,
- * plan-trip entry points, quick replies, form submission, and the
- * automatic welcome after login/signup.
+ * thread switching, multi-turn AI streaming, plan-trip entry points,
+ * and automatic welcome after login/signup.
  */
 import { isLoggedIn, getUserName } from '../services/authService.js';
-import { saveMessage, loadHistory, getWelcomeHtml } from '../services/chatHistoryService.js';
 import { getBotReplyStreaming } from '../services/botService.js';
 
 export const initChatbot = () => {
@@ -29,101 +28,152 @@ export const initChatbot = () => {
     async function openChatbot() {
         if (chatbotWindow) {
             chatbotWindow.classList.add('active');
-            
+
             // If no active thread, show empty state (no thread created yet)
             if (!activeThreadId) {
                 switchToEmptyState();
             } else {
                 switchToActiveChat();
             }
-            
+
             loadThreads();
         }
     }
 
-    if (chatbotTrigger) chatbotTrigger.addEventListener('click', handlePlanTripClick);
-    if (closeChat) closeChat.addEventListener('click', () => chatbotWindow.classList.remove('active'));
+    if (chatbotTrigger) {
+        chatbotTrigger.addEventListener('click', handlePlanTripClick);
+    }
 
-    // Add toggle sidebar functionality
-    document.querySelector('.sidebar-icon').addEventListener('click', () => {
-        document.querySelector('.chat-sidebar').classList.toggle('collapsed');
-    });
+    if (closeChat && chatbotWindow) {
+        closeChat.addEventListener('click', () => {
+            chatbotWindow.classList.remove('active');
+        });
+    }
 
+    // Toggle sidebar functionality with null checks
+    const sidebarIcon = document.querySelector('.sidebar-icon');
+    const chatSidebar = document.querySelector('.chat-sidebar');
+    if (sidebarIcon && chatSidebar) {
+        sidebarIcon.addEventListener('click', () => {
+            chatSidebar.classList.toggle('collapsed');
+        });
+    }
+
+    // Click outside chatbot window to close
     document.addEventListener('click', (e) => {
         if (chatbotWindow && chatbotWindow.classList.contains('active')) {
-            if (!chatbotWindow.contains(e.target) && !chatbotTrigger.contains(e.target)) {
+            if (!chatbotWindow.contains(e.target) && (!chatbotTrigger || !chatbotTrigger.contains(e.target)) && !e.target.closest('.plan-trip-btn, .btn-hero')) {
                 chatbotWindow.classList.remove('active');
             }
         }
     });
 
+    // Global listener for "Plan a Trip" buttons across modals and hero sections
+    document.addEventListener('click', (e) => {
+        const planBtn = e.target.closest('.plan-trip-btn, .btn-hero');
+        if (planBtn) {
+            handlePlanTripClick(e);
+        }
+    });
+
     async function loadThreads() {
-        const response = await fetch('/api/threads');
-        const threads = await response.json();
-        const threadList = document.getElementById('thread-list');
-        threadList.innerHTML = '';
-        threads.forEach(thread => {
-            const div = document.createElement('div');
-            div.className = 'thread-item';
-            div.textContent = thread.title;
-            div.onclick = () => selectThread(thread.id);
-            threadList.appendChild(div);
-        });
+        try {
+            const response = await fetch('/api/threads');
+            if (!response.ok) return;
+            const threads = await response.json();
+            const threadList = document.getElementById('thread-list');
+            if (!threadList) return;
+            threadList.innerHTML = '';
+            threads.forEach(thread => {
+                const div = document.createElement('div');
+                div.className = 'thread-item' + (thread.id === activeThreadId ? ' active' : '');
+                div.textContent = thread.title;
+                div.onclick = () => selectThread(thread.id);
+                threadList.appendChild(div);
+            });
+        } catch (err) {
+            console.error('Failed to load threads:', err);
+        }
     }
 
     async function selectThread(threadId) {
-        activeThreadId = threadId;
-        const response = await fetch(`/api/threads/${threadId}/messages`);
-        const messages = await response.json();
-        chatMessages.innerHTML = '';
-        switchToActiveChat();
-        messages.forEach(msg => {
-            addBotMessageBubble(msg.sender, msg.text);
-        });
+        try {
+            activeThreadId = threadId;
+            const response = await fetch(`/api/threads/${threadId}/messages`);
+            if (!response.ok) return;
+            const messages = await response.json();
+            if (chatMessages) chatMessages.innerHTML = '';
+            switchToActiveChat();
+            messages.forEach(msg => {
+                addBotMessageBubble(msg.sender, msg.text);
+            });
+            // Update active state in sidebar list
+            loadThreads();
+        } catch (err) {
+            console.error('Failed to select thread:', err);
+        }
     }
 
     function switchToActiveChat() {
-        document.querySelector('.chat-empty-state').style.display = 'none';
-        chatMessages.style.display = 'flex';
-        // Move chatForm to chat-main
-        document.getElementById('chat-main').appendChild(chatForm);
-        chatForm.style.display = 'flex'; // Ensure input bar is shown
+        const emptyState = document.querySelector('.chat-empty-state');
+        if (emptyState) emptyState.style.display = 'none';
+        if (chatMessages) chatMessages.style.display = 'flex';
+        const chatMain = document.getElementById('chat-main');
+        if (chatMain && chatForm) {
+            chatMain.appendChild(chatForm);
+        }
+        if (chatForm) chatForm.style.display = 'flex';
     }
 
     function switchToEmptyState() {
         activeThreadId = null;
-        chatMessages.innerHTML = '';
-        document.querySelector('.chat-empty-state').style.display = 'flex';
-        chatMessages.style.display = 'none';
-        // Move chatForm to chat-empty-state
-        document.querySelector('.chat-empty-state').appendChild(chatForm);
-        chatForm.style.display = 'flex'; // Ensure input bar is shown
+        if (chatMessages) {
+            chatMessages.innerHTML = '';
+            chatMessages.style.display = 'none';
+        }
+        const emptyState = document.querySelector('.chat-empty-state');
+        if (emptyState) {
+            emptyState.style.display = 'flex';
+            if (chatForm) emptyState.appendChild(chatForm);
+        }
+        if (chatForm) chatForm.style.display = 'flex';
     }
 
-    document.getElementById('new-chat-btn').addEventListener('click', () => {
-        switchToEmptyState();
-        loadThreads();
-    });
+    const newChatBtn = document.getElementById('new-chat-btn');
+    if (newChatBtn) {
+        newChatBtn.addEventListener('click', () => {
+            switchToEmptyState();
+            loadThreads();
+        });
+    }
 
     if (chatForm) {
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!chatInput) return;
             const message = chatInput.value.trim();
             if (!message) return;
 
             if (!activeThreadId) {
-                const response = await fetch('/api/threads', { method: 'POST' });
-                const thread = await response.json();
-                activeThreadId = thread.id;
+                try {
+                    const response = await fetch('/api/threads', { method: 'POST' });
+                    if (response.ok) {
+                        const thread = await response.json();
+                        activeThreadId = thread.id;
+                    }
+                } catch (err) {
+                    console.error('Failed to create thread:', err);
+                }
             }
 
             addUserMessage(message);
             chatInput.value = '';
-            
-            if (document.querySelector('.chat-empty-state').style.display !== 'none') {
+
+            const emptyState = document.querySelector('.chat-empty-state');
+            if (emptyState && emptyState.style.display !== 'none') {
                 switchToActiveChat();
             }
-            
+
             processBotResponse(message);
         });
     }
@@ -137,6 +187,7 @@ export const initChatbot = () => {
     }
 
     function addUserMessage(text) {
+        if (!chatMessages) return;
         const msgDiv = document.createElement('div');
         msgDiv.className = 'message user-message';
         msgDiv.textContent = text;
@@ -145,6 +196,7 @@ export const initChatbot = () => {
     }
 
     function addBotMessageBubble(sender, text) {
+        if (!chatMessages) return;
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${sender}-message`;
         msgDiv.innerHTML = formatMarkdown(text);
@@ -153,6 +205,7 @@ export const initChatbot = () => {
     }
 
     function showTypingIndicator() {
+        if (!chatMessages) return null;
         const indicator = document.createElement('div');
         indicator.className = 'typing-indicator message bot-message';
         indicator.id = 'typing-indicator';
@@ -164,28 +217,50 @@ export const initChatbot = () => {
 
     async function processBotResponse(query) {
         const indicator = showTypingIndicator();
+        if (!chatMessages) return;
         const msgDiv = document.createElement('div');
         msgDiv.className = 'message bot-message';
         chatMessages.appendChild(msgDiv);
         scrollToBottom();
 
         let fullResponse = "";
-        await getBotReplyStreaming(query, activeThreadId,
-            (chunk) => {
-                fullResponse += chunk;
-                msgDiv.innerHTML = formatMarkdown(fullResponse);
-                scrollToBottom();
-            },
-            () => {
-                indicator.remove();
-                loadThreads();
-            }
-        );
+        try {
+            await getBotReplyStreaming(query, activeThreadId,
+                (chunk) => {
+                    fullResponse += chunk;
+                    msgDiv.innerHTML = formatMarkdown(fullResponse);
+                    scrollToBottom();
+                },
+                () => {
+                    if (indicator) indicator.remove();
+                    loadThreads();
+                }
+            );
+        } catch (err) {
+            console.error('Bot streaming error:', err);
+            if (indicator) indicator.remove();
+            msgDiv.innerHTML = '<p>Sorry, I encountered an issue while generating your response. Please try again.</p>';
+        }
     }
 
     function scrollToBottom() {
         if (chatMessages) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
+    }
+
+    // Auto open chatbot after login / signup
+    if (localStorage.getItem('justLoggedIn') === 'true') {
+        localStorage.removeItem('justLoggedIn');
+        setTimeout(() => {
+            openChatbot();
+        }, 500);
+    }
+
+    if (localStorage.getItem('justSignedUp') === 'true') {
+        localStorage.removeItem('justSignedUp');
+        setTimeout(() => {
+            openChatbot();
+        }, 500);
     }
 };

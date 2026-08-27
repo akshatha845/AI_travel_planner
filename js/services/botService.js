@@ -28,9 +28,13 @@ export const getBotReplyStreaming = async (query, threadId, onChunk, onComplete)
             const lines = chunk.split('\n');
             for (const line of lines) {
                 if (line.startsWith('data: ')) {
-                    const data = JSON.parse(line.substring(6));
-                    if (data.content) {
-                        onChunk(data.content);
+                    try {
+                        const data = JSON.parse(line.substring(6));
+                        if (data.content) {
+                            onChunk(data.content);
+                        }
+                    } catch (e) {
+                        // ignore malformed or partial line
                     }
                 }
             }

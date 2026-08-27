@@ -2533,7 +2533,7 @@ footer {
     inset: 0;
     z-index: 2000;
     font-family: 'Outfit', sans-serif;
-    pointer-events: auto;
+    pointer-events: none;
 }
 
 .chatbot-trigger {
