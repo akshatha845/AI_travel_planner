@@ -144,37 +144,45 @@
         <span class="arrow">⬆️</span>
     </button>
 
-    <!-- AI Chatbot Interface Section. -->
-    <div class="chatbot-container">
-        <!-- Persistent launcher button. -->
-        <div class="chatbot-trigger" id="chatbot-trigger">
-            <!-- Representing the botanical intelligence. -->
-            <span>🤖</span>
+    <!-- AI Chatbot: Floating interactive component. -->
+    <div class="chatbot-container" id="chatbot-container">
+        <div class="chatbot-trigger" id="chatbot-trigger" aria-label="Open assistant">
+            <span>✦</span>
         </div>
 
-        <!-- Pop-up chat window logic. -->
         <div class="chatbot-window" id="chatbot-window">
-            <!-- Branding/Info header for chat. -->
-            <div class="chat-header">
-                <div class="chat-header-info">
-                    <h4>🇮🇳 India Travel Assistant</h4>
-                    <p>Powered by AI</p>
+            <div class="chatbot-shell">
+                <header class="chat-headerbar">
+                    <button class="close-chat" id="close-chat" aria-label="Close" style="margin-left: auto;">&times;</button>
+                </header>
+                <div class="chatbot-wrapper">
+                    <aside class="chat-sidebar" id="chat-sidebar">
+                        <div class="sidebar-controls">
+                            <button class="sidebar-icon" type="button" aria-label="Toggle Sidebar">☰</button>
+                            <button id="new-chat-btn" class="chat-new-btn" type="button"><span class="btn-text">+ New Chat</span><span class="btn-icon" style="display:none;">+</span></button>
+                        </div>
+                        <div class="thread-content">
+                            <div class="thread-list-header">Recents</div>
+                            <div id="thread-list" class="thread-list">
+                                <!-- Threads populated dynamically -->
+                            </div>
+                        </div>
+                    </aside>
+                    <main class="chat-main" id="chat-main">
+                        <div class="chat-empty-state">
+                            <div class="chat-hero-icon" aria-hidden="true">✦</div>
+                            <h1>How can I help you today?</h1>
+                            <p>Your AI-powered travel planner is ready.</p>
+                            <form class="chat-input-container" id="chat-form">
+                                <input type="text" class="chat-input" id="chat-input" placeholder="Ask anything..." autocomplete="off">
+                                <button type="submit" class="send-btn" aria-label="Send">➤</button>
+                            </form>
+                        </div>
+
+                        <div class="chat-messages" id="chat-messages"></div>
+                    </main>
                 </div>
-                <!-- Close cross symbol. -->
-                <button class="close-chat" id="close-chat">&times;</button>
             </div>
-            <!-- Thread history scroll area. -->
-            <div class="chat-messages" id="chat-messages">
-                <!-- Javascript 'app.js' populates messages here. -->
-            </div>
-            <!-- Chat Input form. -->
-            <form class="chat-input-container" id="chat-form">
-                <!-- Keyboard input. -->
-                <input type="text" class="chat-input" id="chat-input" placeholder="Ask me anything about India..."
-                    autocomplete="off">
-                <!-- Submit arrow. -->
-                <button type="submit" class="send-btn">➤</button>
-            </form>
         </div>
     </div>
 
