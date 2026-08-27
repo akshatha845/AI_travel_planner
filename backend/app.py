@@ -59,7 +59,7 @@ def generate_itinerary():
             config = {"configurable": {"thread_id": thread_id}}
             state = graph.get_state(config)
             thread = ChatThread.query.get(thread_id)
-            if thread and state.values.get("title"):
+            if thread and state.values and state.values.get("title"):
                 thread.title = state.values.get("title")
                 db.session.commit()
                 
