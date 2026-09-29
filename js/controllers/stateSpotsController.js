@@ -48,6 +48,8 @@ export const initStateSpots = () => {
                 }
 
                 /* Build the internal HTML structure for each spot. */
+                const isAdventure = window.location.pathname.includes('adventure.html');
+                const actionText = isAdventure ? 'Plan Adventure 🤖' : 'Plan a Trip 🤖';
                 spotEl.innerHTML = `
                     <div class="spot-image-container">
                         <div class="spot-image" style="background-image: url('${spot.image}'); width: 100%; height: 100%; background-size: cover; background-position: center;"></div>
@@ -57,6 +59,7 @@ export const initStateSpots = () => {
                         <p>${spot.desc}</p>
                         <span class="spot-time">📅 Best Time: ${spot.time}</span>
                         ${badgeHtml}
+                        <button class="plan-trip-btn spot-plan-btn" type="button" data-spot="${spot.name}" data-state="${stateData.name}" data-desc="${spot.desc}" data-time="${spot.time}">${actionText}</button>
                     </div>
                 `;
 
@@ -99,8 +102,16 @@ export const initStateSpots = () => {
         document.body.style.overflow = '';
     }
 
+    /* Expose closeStateSpots on window so chatbotController can close it if needed */
+    window.closeStateSpotsModal = closeStateSpots;
+
     /* Attach click listeners to state cards (use delegation so dynamically-loaded cards work too). */
     document.addEventListener('click', function (e) {
+        /* If user clicked directly on the Plan a Trip button on a card, do not open state gallery */
+        if (e.target.closest('.card-plan-btn, .plan-trip-btn')) {
+            return;
+        }
+
         const card = e.target.closest('.state-card');
         if (!card) return;
 

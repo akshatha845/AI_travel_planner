@@ -145,14 +145,164 @@
 
     <!-- AI Chatbot: Floating interactive component. -->
     <div class="chatbot-container" id="chatbot-container">
-        <div class="chatbot-trigger" id="chatbot-trigger" aria-label="Open assistant">
-            <span>✦</span>
+        <div class="chatbot-trigger" id="chatbot-trigger" aria-label="Open AI Travel Assistant" title="AI Travel Assistant">
+            <svg class="chatbot-trigger-icon" width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs>
+                    <!-- Circular Clip to fit perfectly inside the circle -->
+                    <clipPath id="circleIslandClip">
+                        <circle cx="32" cy="32" r="32"/>
+                    </clipPath>
+
+                    <!-- Sky Gradient -->
+                    <linearGradient id="skyGradient" x1="32" y1="0" x2="32" y2="40" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#38bdf8"/>
+                        <stop offset="60%" stop-color="#7dd3fc"/>
+                        <stop offset="100%" stop-color="#e0f2fe"/>
+                    </linearGradient>
+
+                    <!-- Tropical Sun Gradient -->
+                    <radialGradient id="sunGradient" cx="48" cy="16" r="10" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#fffbeb"/>
+                        <stop offset="50%" stop-color="#fde047"/>
+                        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.9"/>
+                    </radialGradient>
+
+                    <!-- Water / Sea Gradient -->
+                    <linearGradient id="seaGradient" x1="32" y1="36" x2="32" y2="64" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#06b6d4"/>
+                        <stop offset="40%" stop-color="#0284c7"/>
+                        <stop offset="100%" stop-color="#0369a1"/>
+                    </linearGradient>
+
+                    <!-- Sand Gradient -->
+                    <linearGradient id="sandGradient" x1="4" y1="38" x2="40" y2="60" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#fef08a"/>
+                        <stop offset="35%" stop-color="#facc15"/>
+                        <stop offset="75%" stop-color="#eab308"/>
+                        <stop offset="100%" stop-color="#ca8a04"/>
+                    </linearGradient>
+                </defs>
+
+                <g clip-path="url(#circleIslandClip)">
+                    <!-- 1. Sky -->
+                    <rect width="64" height="64" fill="url(#skyGradient)"/>
+
+                    <!-- 2. Radiant Sun -->
+                    <circle cx="48" cy="16" r="10" fill="#fef08a" opacity="0.25"/>
+                    <circle cx="48" cy="16" r="7.5" fill="url(#sunGradient)"/>
+
+                    <!-- 3. Water / Sea -->
+                    <path d="M-2 38C12 36.5 24 39 38 37.5C48 36.5 56 38 66 37L66 66L-2 66Z" fill="url(#seaGradient)"/>
+                    <!-- Sea Waves and Foam Lines -->
+                    <path d="M22 42C30 40.5 40 42.5 50 41C56 40 60 41 64 40.5" stroke="rgba(255, 255, 255, 0.75)" stroke-width="1.4" stroke-linecap="round"/>
+                    <path d="M32 48C38 46.8 46 48.2 54 47C58 46.5 61 47 64 46.5" stroke="rgba(255, 255, 255, 0.6)" stroke-width="1.2" stroke-linecap="round"/>
+                    <path d="M28 55C36 53.8 46 55.5 54 54C58 53.2 61 54 64 53.5" stroke="rgba(255, 255, 255, 0.45)" stroke-width="1.2" stroke-linecap="round"/>
+
+                    <!-- 4. Land / Sand -->
+                    <path d="M-4 66L-4 46C2 41.5 12 37.5 24 39C34 40.5 42 45.5 46 51C48 53.5 47 66 -4 66Z" fill="url(#sandGradient)"/>
+                    <!-- Shoreline Foam / Wet Sand Border -->
+                    <path d="M2 45.5C10 41.5 18 39 26 40.5C34 42 40 46 44 50.5C46 52.8 45.5 58 45.5 62" stroke="rgba(255, 255, 255, 0.65)" stroke-width="1.2" stroke-linecap="round"/>
+
+                    <!-- 5. Coconut Tree on the Land/Sand -->
+                    <!-- Palm Tree Trunk -->
+                    <path d="M16 46C17.5 38 20.5 27 27 17.5" stroke="#78350f" stroke-width="3.8" stroke-linecap="round"/>
+                    <path d="M16 46C17.5 38 20.5 27 27 17.5" stroke="#92400e" stroke-width="2.2" stroke-linecap="round"/>
+                    <!-- Trunk Texture Rings -->
+                    <path d="M18 39L20 40M20 32L22 33M22.5 25L24.5 26" stroke="#451a03" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+
+                    <!-- Coconuts Cluster at Crown -->
+                    <circle cx="24.5" cy="18.5" r="2.2" fill="#582900"/>
+                    <circle cx="28.5" cy="19.5" r="2.2" fill="#451a03"/>
+                    <circle cx="26" cy="21" r="2" fill="#713f12"/>
+
+                    <!-- Palm Fronds / Leaves (Dual-Tone Green for Depth) -->
+                    <!-- Back Fronds (Darker Green) -->
+                    <path d="M27 17.5C21 13 13 13 6 17C12 18.5 19 19.5 27 17.5Z" fill="#15803d"/>
+                    <path d="M27 17.5C27 11 25 5 21 2C24 6 26.5 11 27 17.5Z" fill="#15803d"/>
+                    <path d="M27 17.5C33 13 41 12 48 15C42 17.5 35 18.5 27 17.5Z" fill="#166534"/>
+
+                    <!-- Front Fronds (Vibrant Tropical Green) -->
+                    <path d="M27 17.5C20 10.5 12 9 4 12C10 14.5 18 16 27 17.5Z" fill="#22c55e"/>
+                    <path d="M27 17.5C19 17 12 21 5 28C10 26 18 24 27 17.5Z" fill="#16a34a"/>
+                    <path d="M27 17.5C30 9.5 32 4 30 0.5C31.5 5 31 11 27 17.5Z" fill="#22c55e"/>
+                    <path d="M27 17.5C34 10 43 9 52 11C45 14 36 16 27 17.5Z" fill="#22c55e"/>
+                    <path d="M27 17.5C35 17 43 21 50 28C43 25 35 23 27 17.5Z" fill="#16a34a"/>
+                </g>
+
+                <!-- Clean Outer Rim -->
+                <circle cx="32" cy="32" r="31" stroke="rgba(255, 255, 255, 0.45)" stroke-width="1.5" fill="none"/>
+            </svg>
         </div>
 
         <div class="chatbot-window" id="chatbot-window">
             <div class="chatbot-shell">
                 <header class="chat-headerbar">
-                    <button class="close-chat" id="close-chat" aria-label="Close" style="margin-left: auto;">&times;</button>
+                    <div class="chat-header-brand">
+                        <div class="chat-header-avatar">
+                            <svg width="34" height="34" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <defs>
+                                    <clipPath id="headerIslandClip_dest">
+                                        <circle cx="32" cy="32" r="32"/>
+                                    </clipPath>
+                                    <linearGradient id="skyGradient_hdr_dest" x1="32" y1="0" x2="32" y2="40" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#38bdf8"/>
+                                        <stop offset="60%" stop-color="#7dd3fc"/>
+                                        <stop offset="100%" stop-color="#e0f2fe"/>
+                                    </linearGradient>
+                                    <radialGradient id="sunGradient_hdr_dest" cx="48" cy="16" r="10" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#fffbeb"/>
+                                        <stop offset="50%" stop-color="#fde047"/>
+                                        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.9"/>
+                                    </radialGradient>
+                                    <linearGradient id="seaGradient_hdr_dest" x1="32" y1="36" x2="32" y2="64" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#06b6d4"/>
+                                        <stop offset="40%" stop-color="#0284c7"/>
+                                        <stop offset="100%" stop-color="#0369a1"/>
+                                    </linearGradient>
+                                    <linearGradient id="sandGradient_hdr_dest" x1="4" y1="38" x2="40" y2="60" gradientUnits="userSpaceOnUse">
+                                        <stop offset="0%" stop-color="#fef08a"/>
+                                        <stop offset="35%" stop-color="#facc15"/>
+                                        <stop offset="75%" stop-color="#eab308"/>
+                                        <stop offset="100%" stop-color="#ca8a04"/>
+                                    </linearGradient>
+                                </defs>
+                                <g clip-path="url(#headerIslandClip_dest)">
+                                    <rect width="64" height="64" fill="url(#skyGradient_hdr_dest)"/>
+                                    <circle cx="48" cy="16" r="10" fill="#fef08a" opacity="0.25"/>
+                                    <circle cx="48" cy="16" r="7.5" fill="url(#sunGradient_hdr_dest)"/>
+                                    <path d="M-2 38C12 36.5 24 39 38 37.5C48 36.5 56 38 66 37L66 66L-2 66Z" fill="url(#seaGradient_hdr_dest)"/>
+                                    <path d="M22 42C30 40.5 40 42.5 50 41C56 40 60 41 64 40.5" stroke="rgba(255, 255, 255, 0.75)" stroke-width="1.4" stroke-linecap="round"/>
+                                    <path d="M32 48C38 46.8 46 48.2 54 47C58 46.5 61 47 64 46.5" stroke="rgba(255, 255, 255, 0.6)" stroke-width="1.2" stroke-linecap="round"/>
+                                    <path d="M28 55C36 53.8 46 55.5 54 54C58 53.2 61 54 64 53.5" stroke="rgba(255, 255, 255, 0.45)" stroke-width="1.2" stroke-linecap="round"/>
+                                    <path d="M-4 66L-4 46C2 41.5 12 37.5 24 39C34 40.5 42 45.5 46 51C48 53.5 47 66 -4 66Z" fill="url(#sandGradient_hdr_dest)"/>
+                                    <path d="M2 45.5C10 41.5 18 39 26 40.5C34 42 40 46 44 50.5C46 52.8 45.5 58 45.5 62" stroke="rgba(255, 255, 255, 0.65)" stroke-width="1.2" stroke-linecap="round"/>
+                                    <path d="M16 46C17.5 38 20.5 27 27 17.5" stroke="#78350f" stroke-width="3.8" stroke-linecap="round"/>
+                                    <path d="M16 46C17.5 38 20.5 27 27 17.5" stroke="#92400e" stroke-width="2.2" stroke-linecap="round"/>
+                                    <path d="M18 39L20 40M20 32L22 33M22.5 25L24.5 26" stroke="#451a03" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+                                    <circle cx="24.5" cy="18.5" r="2.2" fill="#582900"/>
+                                    <circle cx="28.5" cy="19.5" r="2.2" fill="#451a03"/>
+                                    <circle cx="26" cy="21" r="2" fill="#713f12"/>
+                                    <path d="M27 17.5C21 13 13 13 6 17C12 18.5 19 19.5 27 17.5Z" fill="#15803d"/>
+                                    <path d="M27 17.5C27 11 25 5 21 2C24 6 26.5 11 27 17.5Z" fill="#15803d"/>
+                                    <path d="M27 17.5C33 13 41 12 48 15C42 17.5 35 18.5 27 17.5Z" fill="#166534"/>
+                                    <path d="M27 17.5C20 10.5 12 9 4 12C10 14.5 18 16 27 17.5Z" fill="#22c55e"/>
+                                    <path d="M27 17.5C19 17 12 21 5 28C10 26 18 24 27 17.5Z" fill="#16a34a"/>
+                                    <path d="M27 17.5C30 9.5 32 4 30 0.5C31.5 5 31 11 27 17.5Z" fill="#22c55e"/>
+                                    <path d="M27 17.5C34 10 43 9 52 11C45 14 36 16 27 17.5Z" fill="#22c55e"/>
+                                    <path d="M27 17.5C35 17 43 21 50 28C43 25 35 23 27 17.5Z" fill="#16a34a"/>
+                                </g>
+                                <circle cx="32" cy="32" r="31" stroke="rgba(255, 255, 255, 0.45)" stroke-width="1.5" fill="none"/>
+                            </svg>
+                        </div>
+                        <span class="chat-header-title">AI Travel Assistant</span>
+                    </div>
+                    <div class="chat-header-actions" style="margin-left: auto; display: flex; align-items: center; gap: 8px;">
+                        <button id="toggle-images-btn" class="toggle-images-btn" type="button" title="Toggle Photos & Gallery" style="display: none;">
+                            <span>📸 Photos</span>
+                            <span class="btn-badge" id="header-images-badge" style="display:none;">0</span>
+                        </button>
+                        <button class="close-chat" id="close-chat" aria-label="Close">&times;</button>
+                    </div>
                 </header>
                 <div class="chatbot-wrapper">
                     <aside class="chat-sidebar" id="chat-sidebar">
@@ -169,7 +319,62 @@
                     </aside>
                     <main class="chat-main" id="chat-main">
                         <div class="chat-empty-state">
-                            <div class="chat-hero-icon" aria-hidden="true">✦</div>
+                            <div class="chat-hero-icon" aria-hidden="true">
+                                <svg width="78" height="78" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <defs>
+                                        <clipPath id="heroIslandClip_dest">
+                                            <circle cx="32" cy="32" r="32"/>
+                                        </clipPath>
+                                        <linearGradient id="skyGradient_hero_dest" x1="32" y1="0" x2="32" y2="40" gradientUnits="userSpaceOnUse">
+                                            <stop offset="0%" stop-color="#38bdf8"/>
+                                            <stop offset="60%" stop-color="#7dd3fc"/>
+                                            <stop offset="100%" stop-color="#e0f2fe"/>
+                                        </linearGradient>
+                                        <radialGradient id="sunGradient_hero_dest" cx="48" cy="16" r="10" gradientUnits="userSpaceOnUse">
+                                            <stop offset="0%" stop-color="#fffbeb"/>
+                                            <stop offset="50%" stop-color="#fde047"/>
+                                            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.9"/>
+                                        </radialGradient>
+                                        <linearGradient id="seaGradient_hero_dest" x1="32" y1="36" x2="32" y2="64" gradientUnits="userSpaceOnUse">
+                                            <stop offset="0%" stop-color="#06b6d4"/>
+                                            <stop offset="40%" stop-color="#0284c7"/>
+                                            <stop offset="100%" stop-color="#0369a1"/>
+                                        </linearGradient>
+                                        <linearGradient id="sandGradient_hero_dest" x1="4" y1="38" x2="40" y2="60" gradientUnits="userSpaceOnUse">
+                                            <stop offset="0%" stop-color="#fef08a"/>
+                                            <stop offset="35%" stop-color="#facc15"/>
+                                            <stop offset="75%" stop-color="#eab308"/>
+                                            <stop offset="100%" stop-color="#ca8a04"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <g clip-path="url(#heroIslandClip_dest)">
+                                        <rect width="64" height="64" fill="url(#skyGradient_hero_dest)"/>
+                                        <circle cx="48" cy="16" r="10" fill="#fef08a" opacity="0.25"/>
+                                        <circle cx="48" cy="16" r="7.5" fill="url(#sunGradient_hero_dest)"/>
+                                        <path d="M-2 38C12 36.5 24 39 38 37.5C48 36.5 56 38 66 37L66 66L-2 66Z" fill="url(#seaGradient_hero_dest)"/>
+                                        <path d="M22 42C30 40.5 40 42.5 50 41C56 40 60 41 64 40.5" stroke="rgba(255, 255, 255, 0.75)" stroke-width="1.4" stroke-linecap="round"/>
+                                        <path d="M32 48C38 46.8 46 48.2 54 47C58 46.5 61 47 64 46.5" stroke="rgba(255, 255, 255, 0.6)" stroke-width="1.2" stroke-linecap="round"/>
+                                        <path d="M28 55C36 53.8 46 55.5 54 54C58 53.2 61 54 64 53.5" stroke="rgba(255, 255, 255, 0.45)" stroke-width="1.2" stroke-linecap="round"/>
+                                        <path d="M-4 66L-4 46C2 41.5 12 37.5 24 39C34 40.5 42 45.5 46 51C48 53.5 47 66 -4 66Z" fill="url(#sandGradient_hero_dest)"/>
+                                        <path d="M2 45.5C10 41.5 18 39 26 40.5C34 42 40 46 44 50.5C46 52.8 45.5 58 45.5 62" stroke="rgba(255, 255, 255, 0.65)" stroke-width="1.2" stroke-linecap="round"/>
+                                        <path d="M16 46C17.5 38 20.5 27 27 17.5" stroke="#78350f" stroke-width="3.8" stroke-linecap="round"/>
+                                        <path d="M16 46C17.5 38 20.5 27 27 17.5" stroke="#92400e" stroke-width="2.2" stroke-linecap="round"/>
+                                        <path d="M18 39L20 40M20 32L22 33M22.5 25L24.5 26" stroke="#451a03" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+                                        <circle cx="24.5" cy="18.5" r="2.2" fill="#582900"/>
+                                        <circle cx="28.5" cy="19.5" r="2.2" fill="#451a03"/>
+                                        <circle cx="26" cy="21" r="2" fill="#713f12"/>
+                                        <path d="M27 17.5C21 13 13 13 6 17C12 18.5 19 19.5 27 17.5Z" fill="#15803d"/>
+                                        <path d="M27 17.5C27 11 25 5 21 2C24 6 26.5 11 27 17.5Z" fill="#15803d"/>
+                                        <path d="M27 17.5C33 13 41 12 48 15C42 17.5 35 18.5 27 17.5Z" fill="#166534"/>
+                                        <path d="M27 17.5C20 10.5 12 9 4 12C10 14.5 18 16 27 17.5Z" fill="#22c55e"/>
+                                        <path d="M27 17.5C19 17 12 21 5 28C10 26 18 24 27 17.5Z" fill="#16a34a"/>
+                                        <path d="M27 17.5C30 9.5 32 4 30 0.5C31.5 5 31 11 27 17.5Z" fill="#22c55e"/>
+                                        <path d="M27 17.5C34 10 43 9 52 11C45 14 36 16 27 17.5Z" fill="#22c55e"/>
+                                        <path d="M27 17.5C35 17 43 21 50 28C43 25 35 23 27 17.5Z" fill="#16a34a"/>
+                                    </g>
+                                    <circle cx="32" cy="32" r="31" stroke="rgba(255, 255, 255, 0.45)" stroke-width="1.5" fill="none"/>
+                                </svg>
+                            </div>
                             <h1>How can I help you today?</h1>
                             <p>Your AI-powered travel planner is ready.</p>
                             <form class="chat-input-container" id="chat-form">
@@ -180,6 +385,22 @@
 
                         <div class="chat-messages" id="chat-messages"></div>
                     </main>
+                    <aside class="chat-images-sidebar collapsed" id="chat-images-sidebar">
+                        <div class="images-sidebar-header">
+                            <div class="images-sidebar-title">
+                                <span>📸</span>
+                                <span>Trip Gallery</span>
+                                <span class="images-sidebar-badge" id="images-count-badge">0</span>
+                            </div>
+                            <button id="close-images-sidebar" class="images-sidebar-close" type="button" aria-label="Close Gallery">&times;</button>
+                        </div>
+                        <div class="images-sidebar-content" id="images-sidebar-content">
+                            <div class="images-empty-state">
+                                <span class="empty-gallery-icon">🏞️</span>
+                                <p>No photos yet for this plan.<br>Ask for an itinerary or explore places to display photos!</p>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </div>

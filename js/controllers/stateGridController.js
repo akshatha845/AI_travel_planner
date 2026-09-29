@@ -20,16 +20,19 @@ export const initStateGrid = () => {
                 return;
             }
 
+            const isAdventure = window.location.pathname.includes('adventure.html');
+            const actionText = isAdventure ? 'Plan Adventure 🤖' : 'Plan a Trip 🤖';
             const html = items.map(item => {
-                return '<a href="#" class="state-card fade-in-section" data-slug="' + item.slug + '"' +
-                    ' style="background-image: url(\'' + item.heroImage + '\');">' +
+                return '<div class="state-card fade-in-section" data-slug="' + item.slug + '"' +
+                    ' style="background-image: url(\'' + item.heroImage + '\'); cursor: pointer;">' +
                     '<div class="state-overlay"></div>' +
                     '<span class="state-icon">' + item.emoji + '</span>' +
                     '<div class="state-info">' +
                     '<h3>' + item.name + '</h3>' +
                     '<p>' + item.highlight + '</p>' +
+                    '<button class="card-plan-btn plan-trip-btn" type="button" data-name="' + item.name + '" data-highlight="' + item.highlight + '" data-type="' + (isAdventure ? 'adventure' : 'destination') + '">' + actionText + '</button>' +
                     '</div>' +
-                    '</a>';
+                    '</div>';
             }).join('');
             grid.innerHTML = html;
 
