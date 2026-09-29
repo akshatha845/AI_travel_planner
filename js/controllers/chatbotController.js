@@ -1,11 +1,18 @@
 /**
  * TRAVEL PLANNER INDIA - CHATBOT CONTROLLER
  * Handles the interactive AI assistance experience: open/close/toggle,
- * thread switching, multi-turn AI streaming, plan-trip entry points,
- * and automatic welcome after login/signup.
+ * thread switching, multi-turn AI streaming, contextual premeditated planning
+ * from cards, and automatic welcome after login/signup.
  */
 import { isLoggedIn, getUserName } from '../services/authService.js';
 import { getBotReplyStreaming } from '../services/botService.js';
+
+let openChatWithPromptFn = null;
+export const openChatWithPrompt = (promptText, isExplore = false) => {
+    if (openChatWithPromptFn) {
+        openChatWithPromptFn(promptText, isExplore);
+    }
+};
 
 export const initChatbot = () => {
     const chatbotTrigger = document.getElementById('chatbot-trigger');
@@ -14,15 +21,131 @@ export const initChatbot = () => {
     const chatMessages = document.getElementById('chat-messages');
     const chatForm = document.getElementById('chat-form');
     const chatInput = document.getElementById('chat-input');
-    let activeThreadId = null;
+    const toggleImagesBtn = document.getElementById('toggle-images-btn');
+    const closeImagesSidebarBtn = document.getElementById('close-images-sidebar');
+    const chatImagesSidebar = document.getElementById('chat-images-sidebar');
+    const imagesSidebarContent = document.getElementById('images-sidebar-content');
+    const imagesCountBadge = document.getElementById('images-count-badge');
+    const headerImagesBadge = document.getElementById('header-images-badge');
 
-    function handlePlanTripClick(e) {
-        if (e) e.preventDefault();
-        if (isLoggedIn()) {
-            openChatbot();
+    let activeThreadId = null;
+    let currentThreadImages = [];
+
+    function toggleImagesSidebar(forceOpen = null) {
+        if (!chatImagesSidebar) return;
+        const shouldOpen = forceOpen !== null ? forceOpen : chatImagesSidebar.classList.contains('collapsed');
+        if (shouldOpen) {
+            chatImagesSidebar.classList.remove('collapsed');
+            if (toggleImagesBtn) toggleImagesBtn.classList.add('active');
         } else {
-            window.location.href = 'login.html';
+            chatImagesSidebar.classList.add('collapsed');
+            if (toggleImagesBtn) toggleImagesBtn.classList.remove('active');
         }
+    }
+
+    if (toggleImagesBtn) {
+        toggleImagesBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleImagesSidebar();
+        });
+    }
+
+    if (closeImagesSidebarBtn) {
+        closeImagesSidebarBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleImagesSidebar(false);
+        });
+    }
+
+    function renderThreadImages(images) {
+        if (!imagesSidebarContent) return;
+        currentThreadImages = images || [];
+        const count = currentThreadImages.length;
+        if (imagesCountBadge) imagesCountBadge.textContent = count;
+        if (headerImagesBadge) {
+            headerImagesBadge.textContent = count;
+            headerImagesBadge.style.display = count > 0 ? 'inline-block' : 'none';
+        }
+
+        if (currentThreadImages.length === 0) {
+            if (toggleImagesBtn) {
+                toggleImagesBtn.style.display = 'none';
+                toggleImagesBtn.classList.remove('visible');
+            }
+            if (headerImagesBadge) {
+                headerImagesBadge.style.display = 'none';
+            }
+            toggleImagesSidebar(false);
+            imagesSidebarContent.innerHTML = `
+                <div class="images-empty-state">
+                    <span class="empty-gallery-icon">🏞️</span>
+                    <p>No photos yet for this plan.<br>Ask for an itinerary or explore places to display photos!</p>
+                </div>
+            `;
+            return;
+        }
+
+        // When images are present, display the Photos button
+        if (toggleImagesBtn) {
+            toggleImagesBtn.style.display = 'inline-flex';
+            toggleImagesBtn.classList.add('visible');
+        }
+
+        imagesSidebarContent.innerHTML = currentThreadImages.map(img => {
+            const url = img.imageUrl || img.url || '';
+            const title = img.title || 'Travel Photo';
+            return `
+                <div class="gallery-card">
+                    <div class="gallery-img-wrap" onclick="window.open('${url}', '_blank')">
+                        <img src="${url}" alt="${title}" loading="lazy" onerror="this.closest('.gallery-card').style.display='none'">
+                    </div>
+                    <div class="gallery-card-body">
+                        <div class="gallery-card-title">📍 ${title}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function appendImagesToGallery(newImages) {
+        if (!newImages || !Array.isArray(newImages) || newImages.length === 0) return;
+        const existingUrls = new Set(currentThreadImages.map(i => (i.imageUrl || i.url)));
+        const toAdd = [];
+        for (const img of newImages) {
+            const url = img.imageUrl || img.url;
+            if (url && !existingUrls.has(url)) {
+                existingUrls.add(url);
+                toAdd.push(img);
+            }
+        }
+        if (toAdd.length > 0) {
+            currentThreadImages = [...currentThreadImages, ...toAdd];
+            renderThreadImages(currentThreadImages);
+            // Do NOT auto-open sidebar; the Photos button is now visible for the user to toggle
+        }
+    }
+
+    async function loadThreadImages(threadId) {
+        if (!threadId) {
+            renderThreadImages([]);
+            return;
+        }
+        try {
+            const response = await fetch(`/api/threads/${threadId}/images`);
+            if (response.ok) {
+                const images = await response.json();
+                renderThreadImages(images);
+            }
+        } catch (err) {
+            console.error('Failed to load thread images:', err);
+        }
+    }
+
+    function handleTriggerClick(e) {
+        if (e) e.preventDefault();
+        openChatbot();
     }
 
     async function openChatbot() {
@@ -34,14 +157,62 @@ export const initChatbot = () => {
                 switchToEmptyState();
             } else {
                 switchToActiveChat();
+                loadThreadImages(activeThreadId);
             }
 
             loadThreads();
         }
     }
 
+    async function handleOpenWithPrompt(promptText, isExplore = false) {
+        if (!promptText) return;
+
+        // 1. Close any open destination/spots modal so the chatbot is clearly visible
+        if (window.closeStateSpotsModal) {
+            window.closeStateSpotsModal();
+        }
+        const stateSpotsModal = document.getElementById('state-spots-modal');
+        if (stateSpotsModal) {
+            stateSpotsModal.classList.remove('active');
+        }
+        const dynamicModal = document.getElementById('dynamic-place-modal');
+        if (dynamicModal) {
+            dynamicModal.classList.remove('active');
+        }
+        document.body.style.overflow = '';
+
+        // 2. Open chatbot window
+        if (!chatbotWindow) return;
+        chatbotWindow.classList.add('active');
+
+        // 3. Create a brand-new thread for this premeditated plan request
+        try {
+            const response = await fetch('/api/threads', { method: 'POST' });
+            if (response.ok) {
+                const thread = await response.json();
+                activeThreadId = thread.id;
+                renderThreadImages([]);
+                toggleImagesSidebar(false);
+            }
+        } catch (err) {
+            console.error('Failed to create thread:', err);
+        }
+
+        // 4. Switch from empty state to active chat
+        switchToActiveChat();
+
+        // 5. Render user message bubble
+        addUserMessage(promptText);
+
+        // 6. Send to backend LangGraph agent and stream response
+        processBotResponse(promptText, isExplore);
+    }
+
+    openChatWithPromptFn = handleOpenWithPrompt;
+    window.openChatWithPrompt = handleOpenWithPrompt;
+
     if (chatbotTrigger) {
-        chatbotTrigger.addEventListener('click', handlePlanTripClick);
+        chatbotTrigger.addEventListener('click', handleTriggerClick);
     }
 
     if (closeChat && chatbotWindow) {
@@ -62,17 +233,134 @@ export const initChatbot = () => {
     // Click outside chatbot window to close
     document.addEventListener('click', (e) => {
         if (chatbotWindow && chatbotWindow.classList.contains('active')) {
-            if (!chatbotWindow.contains(e.target) && (!chatbotTrigger || !chatbotTrigger.contains(e.target)) && !e.target.closest('.plan-trip-btn, .btn-hero')) {
+            if (
+                !chatbotWindow.contains(e.target) &&
+                (!chatbotTrigger || !chatbotTrigger.contains(e.target)) &&
+                !e.target.closest(
+                    '.plan-trip-btn, .btn-hero, #cta-btn, .explore-festival-btn, .festival-card, .guide-plan-btn, .season-plan-btn, .card-plan-btn, .spot-plan-btn'
+                )
+            ) {
                 chatbotWindow.classList.remove('active');
             }
         }
     });
 
-    // Global listener for "Plan a Trip" buttons across modals and hero sections
+    // Global listener for card actions, buttons, and premeditated planning
     document.addEventListener('click', (e) => {
-        const planBtn = e.target.closest('.plan-trip-btn, .btn-hero');
-        if (planBtn) {
-            handlePlanTripClick(e);
+        // State card plan button (destinations & adventure)
+        const cardPlanBtn = e.target.closest('.card-plan-btn');
+        if (cardPlanBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const card = cardPlanBtn.closest('.state-card');
+            const name = cardPlanBtn.getAttribute('data-name') || card?.querySelector('h3')?.textContent.trim() || 'this destination';
+            const highlight = cardPlanBtn.getAttribute('data-highlight') || card?.querySelector('p')?.textContent.trim() || '';
+            const type = cardPlanBtn.getAttribute('data-type') || (window.location.pathname.includes('adventure') ? 'adventure' : 'destination');
+
+            let prompt = '';
+            if (type === 'adventure') {
+                prompt = `Explore adventure in ${name}${highlight ? ' (' + highlight + ')' : ''}. In which places is this adventure most famous, what are other places where these are followed/experienced, and what is special about them?`;
+            } else {
+                prompt = `Explore ${name}${highlight ? ' (' + highlight + ')' : ''}. In which places is this destination most famous, what are other places to explore around here, and what is special about them?`;
+            }
+            handleOpenWithPrompt(prompt, true);
+            return;
+        }
+
+        // Spot item plan button inside state modal
+        const spotPlanBtn = e.target.closest('.spot-plan-btn');
+        if (spotPlanBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const spot = spotPlanBtn.getAttribute('data-spot') || 'this spot';
+            const state = spotPlanBtn.getAttribute('data-state') || '';
+            const desc = spotPlanBtn.getAttribute('data-desc') || '';
+            const time = spotPlanBtn.getAttribute('data-time') || '';
+            const prompt = `Explore ${spot}${state ? ' in ' + state : ''}.${desc ? ' Highlights: ' + desc + '.' : ''}${time ? ' Best time: ' + time + '.' : ''} In which place is this most famous, what are other notable places where this is experienced, and what is special about them?`;
+            handleOpenWithPrompt(prompt, true);
+            return;
+        }
+
+        // State spots modal footer plan button
+        const stateModalPlanBtn = e.target.closest('#state-spots-modal .plan-trip-btn');
+        if (stateModalPlanBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const rawTitle = document.getElementById('state-spots-title')?.textContent.trim() || 'India';
+            const cleanTitle = rawTitle.replace(/^[\p{Emoji}\s]+/u, '').trim() || rawTitle;
+            const prompt = `Explore the top attractions and highlights of ${cleanTitle}. In which places is this most famous, what are other places to visit, and what is special about each of them?`;
+            handleOpenWithPrompt(prompt, true);
+            return;
+        }
+
+        // Dynamic place modal plan button
+        const dynamicModalPlanBtn = e.target.closest('#dynamic-place-modal .plan-trip-btn');
+        if (dynamicModalPlanBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const placeTitle = document.getElementById('dynamic-place-title')?.textContent.trim() || 'this place';
+            const highlights = document.getElementById('dynamic-place-highlights')?.textContent.trim() || '';
+            const time = document.getElementById('dynamic-place-time')?.textContent.trim() || '';
+            const desc = document.getElementById('dynamic-place-desc')?.textContent.trim() || '';
+            const prompt = `Explore ${placeTitle}.${highlights ? ' Highlights: ' + highlights + '.' : ''}${time ? ' Best Time: ' + time + '.' : ''}${desc ? ' ' + desc : ''} Where is this most famous, what other places can be explored, and what is special about them?`;
+            handleOpenWithPrompt(prompt, true);
+            return;
+        }
+
+        // Festival explore button or festival card click
+        const festivalBtn = e.target.closest('.explore-festival-btn');
+        const festivalCard = e.target.closest('.festival-card');
+        if (festivalBtn || (festivalCard && !e.target.closest('a'))) {
+            const card = festivalCard || festivalBtn.closest('.festival-card');
+            if (card) {
+                e.preventDefault();
+                e.stopPropagation();
+                const name = card.getAttribute('data-festival') || card.querySelector('h3')?.textContent.trim() || 'Festival';
+                const subtitle = card.querySelector('.festival-subtitle')?.textContent.trim() || '';
+                const season = card.querySelector('.season-badge')?.textContent.trim() || '';
+                const desc = card.querySelector('.festival-desc')?.textContent.trim() || '';
+                const prompt = `Explore the festival of ${name}${subtitle ? ' (' + subtitle + ')' : ''} in India${season ? ' during ' + season : ''}.${desc ? ' Highlights: ' + desc + '.' : ''} In which place is this festival most famous, what are other places where it is celebrated, and what is special about the traditions in each place?`;
+                handleOpenWithPrompt(prompt, true);
+                return;
+            }
+        }
+
+        // Guide card plan button
+        const guidePlanBtn = e.target.closest('.guide-plan-btn');
+        if (guidePlanBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const card = guidePlanBtn.closest('.guide-card');
+            const title = card?.querySelector('h3')?.textContent.trim() || 'Festival Guide';
+            const duration = card?.querySelector('.duration-badge')?.textContent.trim() || '';
+            const desc = card?.querySelector('p')?.textContent.trim() || '';
+            const prompt = `Explore ${title}${duration ? ' (' + duration + ')' : ''}.${desc ? ' Summary: ' + desc : ''} In which places is this celebration most famous, what are other places where it is followed, and what is special about them?`;
+            handleOpenWithPrompt(prompt, true);
+            return;
+        }
+
+        // Seasonal festival card plan button
+        const seasonPlanBtn = e.target.closest('.season-plan-btn');
+        if (seasonPlanBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const card = seasonPlanBtn.closest('.season-festival-card');
+            const title = card?.querySelector('h3')?.textContent.trim() || 'Seasonal Festivals';
+            const range = card?.querySelector('.season-range')?.textContent.trim() || '';
+            const list = card?.querySelector('.festivals-list')?.textContent.trim() || '';
+            const desc = card?.querySelector('.season-desc')?.textContent.trim() || '';
+            const prompt = `Explore ${title}${range ? ' (' + range + ')' : ''} in India${list ? ', featuring ' + list : ''}.${desc ? ' ' + desc : ''} Where are these festivals most famously celebrated, what other places observe them, and what is special about them?`;
+            handleOpenWithPrompt(prompt, true);
+            return;
+        }
+
+        // Hero or CTA button on index.html
+        const heroPlanBtn = e.target.closest('.btn-hero, #cta-btn');
+        if (heroPlanBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            openChatbot();
+            return;
         }
     });
 
@@ -107,6 +395,8 @@ export const initChatbot = () => {
             messages.forEach(msg => {
                 addBotMessageBubble(msg.sender, msg.text);
             });
+            // Load and display images for this selected thread
+            loadThreadImages(threadId);
             // Update active state in sidebar list
             loadThreads();
         } catch (err) {
@@ -127,6 +417,8 @@ export const initChatbot = () => {
 
     function switchToEmptyState() {
         activeThreadId = null;
+        renderThreadImages([]);
+        toggleImagesSidebar(false);
         if (chatMessages) {
             chatMessages.innerHTML = '';
             chatMessages.style.display = 'none';
@@ -199,7 +491,11 @@ export const initChatbot = () => {
         if (!chatMessages) return;
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${sender}-message`;
-        msgDiv.innerHTML = formatMarkdown(text);
+        if (sender === 'bot') {
+            msgDiv.innerHTML = `<div class="bot-avatar">🌴 AI Travel Assistant</div>${formatMarkdown(text)}`;
+        } else {
+            msgDiv.innerHTML = formatMarkdown(text);
+        }
         chatMessages.appendChild(msgDiv);
         scrollToBottom();
     }
@@ -209,37 +505,47 @@ export const initChatbot = () => {
         const indicator = document.createElement('div');
         indicator.className = 'typing-indicator message bot-message';
         indicator.id = 'typing-indicator';
-        indicator.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+        indicator.innerHTML = '<div class="bot-avatar" style="margin-bottom:0;margin-right:8px;">🌴</div><div class="dot"></div><div class="dot"></div><div class="dot"></div>';
         chatMessages.appendChild(indicator);
         scrollToBottom();
         return indicator;
     }
 
-    async function processBotResponse(query) {
+    async function processBotResponse(query, isExplore = false) {
         const indicator = showTypingIndicator();
         if (!chatMessages) return;
         const msgDiv = document.createElement('div');
         msgDiv.className = 'message bot-message';
+        msgDiv.innerHTML = `<div class="bot-avatar">🌴 AI Travel Assistant</div>`;
         chatMessages.appendChild(msgDiv);
         scrollToBottom();
 
         let fullResponse = "";
         try {
-            await getBotReplyStreaming(query, activeThreadId,
+            await getBotReplyStreaming(
+                query,
+                activeThreadId,
                 (chunk) => {
                     fullResponse += chunk;
-                    msgDiv.innerHTML = formatMarkdown(fullResponse);
+                    msgDiv.innerHTML = `<div class="bot-avatar">🌴 AI Travel Assistant</div>${formatMarkdown(fullResponse)}`;
                     scrollToBottom();
                 },
                 () => {
                     if (indicator) indicator.remove();
                     loadThreads();
+                    if (activeThreadId) {
+                        loadThreadImages(activeThreadId);
+                    }
+                },
+                isExplore,
+                (images) => {
+                    appendImagesToGallery(images);
                 }
             );
         } catch (err) {
             console.error('Bot streaming error:', err);
             if (indicator) indicator.remove();
-            msgDiv.innerHTML = '<p>Sorry, I encountered an issue while generating your response. Please try again.</p>';
+            msgDiv.innerHTML = '<div class="bot-avatar">🌴 AI Travel Assistant</div><p>Sorry, I encountered an issue while generating your response. Please try again.</p>';
         }
     }
 

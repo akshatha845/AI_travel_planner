@@ -137,4 +137,32 @@ class ChatMessage(db.Model):
     thread_id = db.Column(db.String(36), db.ForeignKey('chat_threads.id'), nullable=False)
     sender = db.Column(db.String(10), nullable=False) # 'user' or 'bot'
     text = db.Column(db.Text, nullable=False)
+    images = db.Column(db.Text, default='[]') # JSON list of {url, title}
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'threadId': self.thread_id,
+            'sender': self.sender,
+            'text': self.text,
+            'images': json.loads(self.images or '[]'),
+            'createdAt': self.created_at.isoformat()
+        }
+
+class ThreadImage(db.Model):
+    __tablename__ = 'thread_images'
+    id = db.Column(db.Integer, primary_key=True)
+    thread_id = db.Column(db.String(36), db.ForeignKey('chat_threads.id'), nullable=False)
+    image_url = db.Column(db.Text, nullable=False)
+    title = db.Column(db.String(255), default='')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'threadId': self.thread_id,
+            'imageUrl': self.image_url,
+            'title': self.title,
+            'createdAt': self.created_at.isoformat()
+        }

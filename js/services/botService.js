@@ -3,41 +3,57 @@
  * Handles communication with the backend graph API.
  */
 
-export const getBotReplyStreaming = async (query, threadId, onChunk, onComplete) => {
+export const getBotReplyStreaming = async (query, threadId, onChunk, onComplete, isExplore = false, onImages = null) => {
     try {
         const response = await fetch('/api/generate-itinerary', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ query: query, thread_id: threadId }),
+            body: JSON.stringify({ query: query, thread_id: threadId, is_explore: isExplore }),
         });
 
         if (!response.body) return;
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
+        let buffer = '';
 
         while (true) {
             const { done, value } = await reader.read();
             if (done) break;
             
-            const chunk = decoder.decode(value, { stream: true });
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || '';
             
-            // The backend sends SSE format: "data: {"content": "..."}\n\n"
-            const lines = chunk.split('\n');
             for (const line of lines) {
-                if (line.startsWith('data: ')) {
+                const trimmed = line.trim();
+                if (trimmed.startsWith('data: ')) {
                     try {
-                        const data = JSON.parse(line.substring(6));
+                        const data = JSON.parse(trimmed.substring(6));
                         if (data.content) {
                             onChunk(data.content);
+                        }
+                        if (data.images && typeof onImages === 'function') {
+                            onImages(data.images);
                         }
                     } catch (e) {
                         // ignore malformed or partial line
                     }
                 }
             }
+        }
+        if (buffer.trim().startsWith('data: ')) {
+            try {
+                const data = JSON.parse(buffer.trim().substring(6));
+                if (data.content) {
+                    onChunk(data.content);
+                }
+                if (data.images && typeof onImages === 'function') {
+                    onImages(data.images);
+                }
+            } catch (e) {}
         }
         onComplete();
     } catch (error) {
