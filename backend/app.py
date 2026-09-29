@@ -101,7 +101,7 @@ def generate_itinerary():
                         if not exists:
                             db.session.add(ThreadImage(thread_id=thread_id, image_url=img_url, title=img_title))
 
-                thread = ChatThread.query.get(thread_id)
+                thread = db.session.get(ChatThread, thread_id)
                 if thread and state.values and state.values.get("title"):
                     thread.title = state.values.get("title")
                 db.session.commit()

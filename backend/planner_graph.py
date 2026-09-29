@@ -4,13 +4,14 @@ import json
 import urllib.parse
 import sqlite3
 import logging
+import concurrent.futures
 from pathlib import Path
 from typing import Annotated, TypedDict, Optional
 from langgraph.graph import StateGraph, END
 from langgraph.graph.message import add_messages
 from langgraph.checkpoint.sqlite import SqliteSaver
-from langchain_ollama import ChatOllama
-from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, SystemMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import tool
 
@@ -18,6 +19,12 @@ import wikipedia
 wikipedia.set_user_agent("TravelPlannerBot/1.0 (https://travelplanner.in; contact@travelplanner.in)")
 from langchain_community.tools import WikipediaQueryRun
 from langchain_community.utilities import WikipediaAPIWrapper
+
+from dotenv import load_dotenv
+
+# Load .env from backend directory or project root
+load_dotenv(Path(__file__).resolve().parent / ".env")
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -124,7 +131,8 @@ def select_best_image_for_spot(spot: str, candidates: list[str]) -> Optional[dic
         return {"url": candidates[0], "title": spot}
 
     numbered_list = ""
-    for idx, u in enumerate(candidates, 1):
+    evaluated_candidates = candidates[:5]
+    for idx, u in enumerate(evaluated_candidates, 1):
         fname = urllib.parse.unquote(u.split("/")[-1].split("?")[0])
         numbered_list += f"{idx}. Filename: {fname} | URL: {u}\n"
 
@@ -146,22 +154,22 @@ def select_best_image_for_spot(spot: str, candidates: list[str]) -> Optional[dic
         response = structured_llm.invoke(selection_prompt)
         content = response.content.strip()
 
-        if "NONE" in content.upper() and not any(cand in content for cand in candidates):
+        if "NONE" in content.upper() and not any(cand in content for cand in evaluated_candidates):
             logger.info(f"LLM determined no suitable scenic photo for '{spot}'")
             return None
 
         # Check if one of candidate URLs is in the response
-        for u in candidates:
+        for u in evaluated_candidates:
             if u in content or u.split("?")[0] in content:
                 logger.info(f"LLM selected photo for '{spot}': {u}")
                 return {"url": u, "title": spot}
 
         # Check for number index match
-        match = re.search(r'\b([1-8])\b', content)
+        match = re.search(r'\b([1-5])\b', content)
         if match:
             idx = int(match.group(1)) - 1
-            if 0 <= idx < len(candidates):
-                chosen = candidates[idx]
+            if 0 <= idx < len(evaluated_candidates):
+                chosen = evaluated_candidates[idx]
                 logger.info(f"LLM selected candidate #{idx+1} for '{spot}': {chosen}")
                 return {"url": chosen, "title": spot}
     except Exception as e:
@@ -183,9 +191,47 @@ class State(TypedDict):
     images: Optional[list[dict]]
     classification: Optional[str]
 
-# Initialize LLM instances
-structured_llm = ChatOllama(model="llama3.2:latest", streaming=False)
-streaming_llm = ChatOllama(model="llama3.2:latest", streaming=True)
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+if not OPENROUTER_API_KEY:
+    logger.warning("OPENROUTER_API_KEY is not set. Please define it in your .env file or environment.")
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+MODEL_NAME = "nvidia/nemotron-3-super-120b-a12b:free"
+FALLBACK_MODEL_NAME = "nvidia/nemotron-3.5-lightning:free"
+
+# Primary LLM instances
+_primary_structured = ChatOpenAI(
+    model=MODEL_NAME,
+    openai_api_key=OPENROUTER_API_KEY,
+    openai_api_base=OPENROUTER_BASE_URL,
+    streaming=False,
+    max_retries=2
+)
+_primary_streaming = ChatOpenAI(
+    model=MODEL_NAME,
+    openai_api_key=OPENROUTER_API_KEY,
+    openai_api_base=OPENROUTER_BASE_URL,
+    streaming=True,
+    max_retries=2
+)
+
+# Fallback LLM instances (auto-activated if primary hits 503 provider_overloaded or 429)
+_fallback_structured = ChatOpenAI(
+    model=FALLBACK_MODEL_NAME,
+    openai_api_key=OPENROUTER_API_KEY,
+    openai_api_base=OPENROUTER_BASE_URL,
+    streaming=False,
+    max_retries=2
+)
+_fallback_streaming = ChatOpenAI(
+    model=FALLBACK_MODEL_NAME,
+    openai_api_key=OPENROUTER_API_KEY,
+    openai_api_base=OPENROUTER_BASE_URL,
+    streaming=True,
+    max_retries=2
+)
+
+structured_llm = _primary_structured.with_fallbacks([_fallback_structured])
+streaming_llm = _primary_streaming.with_fallbacks([_fallback_streaming])
 
 # Define nodes
 def guardrail_node(state: State):
@@ -257,7 +303,22 @@ def place_extraction_and_wiki_node(state: State):
         f"Current Travel Query: {query}\n"
         "Extracted Place:"
     )
-    place_response = structured_llm.invoke(extract_prompt)
+    if history_messages:
+        extract_sys = (
+            "You are a travel entity extractor. Extract the primary destination, city, state, region, attraction, or festival "
+            "from the travel conversation for a Wikipedia search.\n"
+            "If the current query refers to a previously discussed place (e.g. 'the same', 'this', 'yes', 'make it 3 days'), "
+            "identify the destination from the conversation.\n"
+            "Respond with ONLY the exact name of the place or entity (1 to 4 words), and nothing else. No punctuation, no quotes, no conversational filler."
+        )
+        messages = [SystemMessage(content=extract_sys)]
+        for m in history_messages[-2:]:
+            if isinstance(m, (HumanMessage, AIMessage)):
+                messages.append(m)
+        messages.append(HumanMessage(content=f"Current Travel Query: {query}\nExtracted Place:"))
+        place_response = structured_llm.invoke(messages)
+    else:
+        place_response = structured_llm.invoke(extract_prompt)
     extracted_place = place_response.content.strip().strip('"\'')
 
     # Fallback to existing state place if extraction returned generic word
@@ -302,25 +363,47 @@ def details_explorer_node(state: State):
     logger.info("Details Explorer Node: Starting exploration details generation")
     query = state["messages"][-1].content
     wiki_context = state.get("wiki_context") or "No specific Wikipedia context found. Rely on factual geographical and cultural knowledge."
+    history_messages = state["messages"][:-1]
     
     prompt_template = ChatPromptTemplate.from_template(load_prompt("details_explorer_prompt.md"))
-    prompt = prompt_template.format(query=query, wiki_context=wiki_context)
+    system_text = prompt_template.format(query=query, wiki_context=wiki_context)
+    
+    system_markdown_suffix = "\n\nCRITICAL FORMATTING: You MUST ALWAYS format your entire output strictly in GitHub-Flavored Markdown (.md format). Never output raw unformatted text or HTML, and do not wrap the response in markdown codeblock fences."
+    
+    # If followup query, use the second reference where the previous messages are being sent
+    if history_messages:
+        logger.info(f"Details Explorer: Sending previous {len(history_messages[-2:])} messages for context")
+        messages = [SystemMessage(content=system_text + system_markdown_suffix)]
+        for m in history_messages[-2:]:
+            if isinstance(m, (HumanMessage, AIMessage)):
+                messages.append(m)
+            else:
+                messages.append(HumanMessage(content=str(m.content)))
+        messages.append(HumanMessage(content=query))
+    else:
+        messages = [
+            SystemMessage(content=system_text + system_markdown_suffix),
+            HumanMessage(content=query)
+        ]
     
     # Stream the response
     full_content = ""
-    for chunk in streaming_llm.stream(prompt):
+    for chunk in streaming_llm.stream(messages):
         full_content += chunk.content
         
     logger.info("Details Explorer Node: Completed")
-    return {"plan": full_content}
+    return {
+        "plan": full_content,
+        "messages": [AIMessage(content=full_content)]
+    }
 
 def itinerary_planner_node(state: State):
     logger.info("Itinerary Planner Node: Starting itinerary generation")
     query = state["messages"][-1].content
     wiki_context = state.get("wiki_context") or "No specific Wikipedia context found. Rely on factual geographical and travel knowledge."
+    history_messages = state["messages"][:-1]
     
     # Extract last 2 previous messages (human and bot) to pass as conversation_history context
-    history_messages = state["messages"][:-1]
     history_str = ""
     if history_messages:
         for m in history_messages[-2:]:
@@ -331,25 +414,61 @@ def itinerary_planner_node(state: State):
         history_str = "None (Start of conversation)."
 
     prompt_template = ChatPromptTemplate.from_template(load_prompt("itinerary_prompt.md"))
-    prompt = prompt_template.format(
+    system_text = prompt_template.format(
         query=query,
         conversation_history=history_str,
         wiki_context=wiki_context
     )
     
+    system_markdown_suffix = "\n\nCRITICAL FORMATTING: You MUST ALWAYS format your entire response strictly in GitHub-Flavored Markdown (.md format). Never output raw unformatted text or HTML, and do not wrap the response in markdown codeblock fences."
+
+    # For followup queries, use the second reference where the previous messages are being sent
+    if history_messages:
+        logger.info(f"Itinerary Planner: Preserving previous {len(history_messages[-2:])} messages for follow-up")
+        messages = [SystemMessage(content=system_text + system_markdown_suffix)]
+        for m in history_messages[-2:]:
+            if isinstance(m, (HumanMessage, AIMessage)):
+                messages.append(m)
+            else:
+                messages.append(HumanMessage(content=str(m.content)))
+        messages.append(HumanMessage(content=query))
+    else:
+        messages = [
+            SystemMessage(content=system_text + system_markdown_suffix),
+            HumanMessage(content=query)
+        ]
+    
     # Stream the response
     full_content = ""
-    for chunk in streaming_llm.stream(prompt):
+    for chunk in streaming_llm.stream(messages):
         full_content += chunk.content
         
     logger.info("Itinerary Planner Node: Completed")
-    return {"plan": full_content}
+    return {
+        "plan": full_content,
+        "messages": [AIMessage(content=full_content)]
+    }
+
+def curate_single_spot(spot: str) -> Optional[dict]:
+    """Concurrently fetches Wikipedia candidates and uses LLM to select the best scenic photo for a spot."""
+    try:
+        logger.info(f"Image Curator Node: [Concurrent] Fetching candidates for spot: '{spot}'")
+        candidates = get_scenic_photo_candidates(spot)
+        if not candidates:
+            logger.info(f"Image Curator Node: No scenic candidates found on Wikipedia for '{spot}'")
+            return None
+        logger.info(f"Image Curator Node: [Concurrent] Validating {len(candidates)} candidates for '{spot}' via LLM")
+        best_img = select_best_image_for_spot(spot, candidates)
+        return best_img
+    except Exception as e:
+        logger.warning(f"Error curating image for spot '{spot}': {e}")
+        return None
 
 def image_curator_node(state: State):
     """
     Extracts top 3 specific landmarks/places from the generated itinerary or exploration guide,
-    queries Wikipedia for candidate photos, filters out text/maps/diagrams,
-    and asks LLM to pick the single best photo per spot (max 3 total).
+    concurrently queries Wikipedia for candidate photos, filters out text/maps/diagrams,
+    and asks LLM in parallel to pick the single best photo per spot (max 3 total).
     """
     logger.info("Image Curator Node: Starting post-itinerary landmark extraction and image curation")
     plan = state.get("plan") or ""
@@ -406,15 +525,20 @@ def image_curator_node(state: State):
 
     curated_images = []
     seen_urls = set()
-    for spot in valid_spots[:3]:
-        logger.info(f"Image Curator Node: Fetching and curating candidate photos for spot: '{spot}'")
-        candidates = get_scenic_photo_candidates(spot)
-        candidates = [c for c in candidates if c not in seen_urls]
-        if candidates:
-            best_img = select_best_image_for_spot(spot, candidates)
-            if best_img and best_img.get("url") and best_img["url"] not in seen_urls:
-                seen_urls.add(best_img["url"])
-                curated_images.append(best_img)
+    spots_to_fetch = valid_spots[:3]
+    if spots_to_fetch:
+        logger.info(f"Image Curator Node: Concurrently fetching and validating photos for spots: {spots_to_fetch}")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=len(spots_to_fetch)) as executor:
+            future_to_spot = {executor.submit(curate_single_spot, spot): spot for spot in spots_to_fetch}
+            for future in concurrent.futures.as_completed(future_to_spot):
+                spot = future_to_spot[future]
+                try:
+                    best_img = future.result()
+                    if best_img and best_img.get("url") and best_img["url"] not in seen_urls:
+                        seen_urls.add(best_img["url"])
+                        curated_images.append(best_img)
+                except Exception as e:
+                    logger.warning(f"Error in concurrent curation future for '{spot}': {e}")
 
     logger.info(f"Image Curator Node: Final curated images count = {len(curated_images)}")
     return {"images": curated_images}
