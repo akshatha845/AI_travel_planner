@@ -99,7 +99,7 @@ export const initChatbot = () => {
             return `
                 <div class="gallery-card">
                     <div class="gallery-img-wrap" onclick="window.open('${url}', '_blank')">
-                        <img src="${url}" alt="${title}" loading="lazy" onerror="this.closest('.gallery-card').style.display='none'">
+                        <img src="${url}" alt="${title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=600&q=80'">
                     </div>
                     <div class="gallery-card-body">
                         <div class="gallery-card-title">📍 ${title}</div>
@@ -393,7 +393,7 @@ export const initChatbot = () => {
             if (chatMessages) chatMessages.innerHTML = '';
             switchToActiveChat();
             messages.forEach(msg => {
-                addBotMessageBubble(msg.sender, msg.text);
+                addBotMessageBubble(msg.sender, msg.text, msg.images);
             });
             // Load and display images for this selected thread
             loadThreadImages(threadId);
@@ -471,11 +471,60 @@ export const initChatbot = () => {
     }
 
     function formatMarkdown(text) {
-        return text
+        if (!text) return '';
+        let clean = text.trim();
+        // Strip markdown code fences if response is wrapped
+        clean = clean.replace(/^```(?:markdown)?\s*\n?/i, '').replace(/\n?```\s*$/i, '');
+
+        if (window.marked && typeof window.marked.parse === 'function') {
+            try {
+                return window.marked.parse(clean, { breaks: true, gfm: true });
+            } catch (e) {
+                console.warn('Error parsing markdown with marked:', e);
+            }
+        }
+
+        // Comprehensive regex fallback if marked is not available
+        return clean
+            .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+            .replace(/^## (.*$)/gim, '<h2>$1</h2>')
             .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+            .replace(/^#### (.*$)/gim, '<h4>$1</h4>')
+            .replace(/^---$/gim, '<hr>')
+            .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+            .replace(/\*(.*?)\*/gim, '<em>$1</em>')
             .replace(/^\- (.*$)/gim, '<li>$1</li>')
-            .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
             .replace(/\n/gim, '<br>');
+    }
+
+    function renderInlineGallery(images) {
+        if (!images || !Array.isArray(images) || images.length === 0) return '';
+        const cardsHtml = images.map(img => {
+            const url = img.imageUrl || img.url || '';
+            const title = img.title || 'Attraction Photo';
+            if (!url) return '';
+            return `
+                <div class="bot-inline-card">
+                    <div class="bot-inline-img-wrap" onclick="window.open('${url}', '_blank')">
+                        <img src="${url}" alt="${title}" class="bot-inline-card-img" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=600&q=80'">
+                    </div>
+                    <div class="bot-inline-card-body">
+                        <div class="bot-inline-card-title">📍 ${title}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        return `
+            <div class="bot-inline-gallery">
+                <div class="bot-inline-gallery-header">
+                    <span>📸 Curated Sights & Photos</span>
+                </div>
+                <div class="bot-inline-gallery-cards">
+                    ${cardsHtml}
+                </div>
+            </div>
+        `;
     }
 
     function addUserMessage(text) {
@@ -487,14 +536,18 @@ export const initChatbot = () => {
         scrollToBottom();
     }
 
-    function addBotMessageBubble(sender, text) {
+    function addBotMessageBubble(sender, text, images = []) {
         if (!chatMessages) return;
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${sender}-message`;
         if (sender === 'bot') {
-            msgDiv.innerHTML = `<div class="bot-avatar">🌴 AI Travel Assistant</div>${formatMarkdown(text)}`;
+            let html = `<div class="bot-avatar">🌴 AI Travel Assistant</div>${formatMarkdown(text)}`;
+            if (images && images.length > 0) {
+                html += renderInlineGallery(images);
+            }
+            msgDiv.innerHTML = html;
         } else {
-            msgDiv.innerHTML = formatMarkdown(text);
+            msgDiv.textContent = text;
         }
         chatMessages.appendChild(msgDiv);
         scrollToBottom();
@@ -521,25 +574,59 @@ export const initChatbot = () => {
         scrollToBottom();
 
         let fullResponse = "";
+        let responseImages = [];
+
+        function updateBotMessageHtml() {
+            let html = `<div class="bot-avatar">🌴 AI Travel Assistant</div>${formatMarkdown(fullResponse)}`;
+            if (responseImages && responseImages.length > 0) {
+                html += renderInlineGallery(responseImages);
+            }
+            msgDiv.innerHTML = html;
+        }
+
         try {
             await getBotReplyStreaming(
                 query,
                 activeThreadId,
                 (chunk) => {
                     fullResponse += chunk;
-                    msgDiv.innerHTML = `<div class="bot-avatar">🌴 AI Travel Assistant</div>${formatMarkdown(fullResponse)}`;
+                    if (indicator) {
+                        indicator.remove();
+                    }
+                    updateBotMessageHtml();
                     scrollToBottom();
                 },
-                () => {
+                async () => {
                     if (indicator) indicator.remove();
                     loadThreads();
                     if (activeThreadId) {
                         loadThreadImages(activeThreadId);
+                        // If images weren't received during the stream, check if they exist on the thread
+                        if (responseImages.length === 0) {
+                            try {
+                                const resp = await fetch(`/api/threads/${activeThreadId}/images`);
+                                if (resp.ok) {
+                                    const imgs = await resp.json();
+                                    if (imgs && imgs.length > 0) {
+                                        responseImages = imgs;
+                                        updateBotMessageHtml();
+                                        scrollToBottom();
+                                    }
+                                }
+                            } catch (e) {
+                                console.warn('Could not fetch thread images post-stream:', e);
+                            }
+                        }
                     }
                 },
                 isExplore,
                 (images) => {
-                    appendImagesToGallery(images);
+                    if (images && Array.isArray(images) && images.length > 0) {
+                        responseImages = images;
+                        appendImagesToGallery(images);
+                        updateBotMessageHtml();
+                        scrollToBottom();
+                    }
                 }
             );
         } catch (err) {

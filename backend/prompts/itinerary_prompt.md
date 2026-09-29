@@ -28,8 +28,15 @@ Your mission is to generate a comprehensive, actionable, realistic, and inspirin
      - Best time to visit and weather expectations
      - Estimated daily budget breakdown
      - Packing essentials and local etiquette
-6. **Tone & Formatting**:
-   - Use engaging, informative, and polished Markdown with bold text, bullet points, and appropriate emojis for readability.
+### MANDATORY OUTPUT FORMAT (.md / Markdown):
+- You MUST ALWAYS generate your entire response strictly in GitHub-Flavored Markdown format (.md).
+- Use `## ` for the main Trip Title (e.g., `## 🏍️ 3-Day Ladakh Bike-Ride Adventure`).
+- Use `---` horizontal dividers between days.
+- Use `### ` for day headers (e.g., `### Day 1: [Theme / Area Title]`).
+- Use bold Markdown for time blocks: `**Morning:**`, `**Afternoon:**`, `**Evening:**`.
+- Use Markdown bullet points `- ` for all activity, food, and logistics items.
+- Use `### ` for the Practical Tips section.
+- NEVER wrap the entire response in markdown code blocks like ```markdown or ```. Output raw markdown text directly.
 
 Recent Conversation History (Previous Messages):
 {conversation_history}
